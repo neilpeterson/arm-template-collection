@@ -1,6 +1,6 @@
 # Output Template
 
-Deploy an Azure Container Instance running the Hello ACI site.
+Deploy an Azure Container Instance running the Hello ACI site and output the public IP address.
 
 ## Deployment
 
@@ -18,35 +18,28 @@ Standard output.
 
 ```
 {
-  "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/simple-template",
-  "location": "eastus",
-  "managedBy": null,
-  "name": "simple-template",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null,
-  "type": "Microsoft.Resources/resourceGroups"
-}
-Neils-MacBook-Pro:arm-templates neilpeterson$ az group deployment create --name simple-template --resource-group simple-template --template-file simple-template/azuredeploy.json 
-{
-  "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/simple-template/providers/Microsoft.Resources/deployments/simple-template",
+  "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/output-template/providers/Microsoft.Resources/deployments/output-template",
   "location": null,
-  "name": "simple-template",
+  "name": "output-template",
   "properties": {
-    "correlationId": "db329cdb-fed9-4298-b578-650a80c1ca82",
+    "correlationId": "9169a799-e9f5-49c0-a990-2e4348e642b0",
     "debugSetting": null,
     "dependencies": [],
-    "duration": "PT1M17.7923116S",
+    "duration": "PT53.3211958S",
     "mode": "Incremental",
     "onErrorDeployment": null,
     "outputResources": [
       {
-        "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/simple-template/providers/Microsoft.ContainerInstance/containerGroups/containerGroup1",
-        "resourceGroup": "simple-template"
+        "id": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/output-template/providers/Microsoft.ContainerInstance/containerGroups/containerGroup1",
+        "resourceGroup": "output-template"
       }
     ],
-    "outputs": {},
+    "outputs": {
+      "container-ip": {
+        "type": "String",
+        "value": "20.185.12.233"
+      }
+    },
     "parameters": {},
     "parametersLink": null,
     "providers": [
@@ -71,11 +64,19 @@ Neils-MacBook-Pro:arm-templates neilpeterson$ az group deployment create --name 
     ],
     "provisioningState": "Succeeded",
     "template": null,
-    "templateHash": "12799901094269348002",
+    "templateHash": "8607273128505602807",
     "templateLink": null,
-    "timestamp": "2019-12-14T14:57:16.965999+00:00"
+    "timestamp": "2019-12-14T15:02:48.260145+00:00"
   },
-  "resourceGroup": "simple-template",
+  "resourceGroup": "output-template",
   "type": "Microsoft.Resources/deployments"
 }
+```
+
+## Remove Deployment
+
+Remove the deplpyment.
+
+```
+az group delete --name output-template --yes --no-wait
 ```

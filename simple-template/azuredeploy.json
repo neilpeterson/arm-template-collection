@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {},
     "variables": {
-        "image": "neilpeterson/nepetersv1",
+        "image": "mcr.microsoft.com/azuredocs/aci-helloworld",
         "containerName": "nepeters"
     },
     "resources": [
