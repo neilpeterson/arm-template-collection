@@ -3,11 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {},
     "variables": {
-        "name": "vote-db-two"
     },
     "resources": [
         {
-            "name": "[variables('name')]",
+            "name": "vote-database",
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2015-04-08",
             "location": "[resourceGroup().location]",
@@ -31,6 +30,15 @@
             }
         }
     ],
-    "outputs": {},
+    "outputs": {
+        "dbendpoint": {
+           "type": "string",
+            "value": "[reference('vote-database').documentEndpoint]"
+        },
+        "dbkey": {
+           "type": "string",
+            "value": "[listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts/', 'vote-database'),'2015-04-08').primaryMasterKey]"
+        }
+    },
     "functions": []
 }

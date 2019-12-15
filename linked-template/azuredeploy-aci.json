@@ -14,10 +14,10 @@
             "type": "string",
             "defaultValue": "Dogs"
         },
-        "cosmos-db": {
+        "cosmosDb": {
             "type": "string"
         },
-        "cosmos-db-key": {
+        "cosmosDbKey": {
             "type": "string"
         }
     },
@@ -45,11 +45,11 @@
                             "environmentVariables": [
                                 {
                                 "name": "COSMOS_DB_ENDPOINT",
-                                "value": "[parameters('cosmos-db')]"
+                                "value": "[parameters('cosmosDb')]"
                                 },
                                 {
                                 "name": "COSMOS_DB_MASTERKEY",
-                                "value": "[parameters('cosmos-db-key')]"
+                                "value": "[parameters('cosmosDbKey')]"
                                 },
                                 {
                                 "name": "TITLE",

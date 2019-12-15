@@ -5,19 +5,39 @@
     "variables": {},
     "resources": [
         {
-            "name": "nestedDeployment1",
+            "name": "votedatabase",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2016-09-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat('artifactsLocation', '/nestedTemplates/nestedTemplate.json', 'artifactsLocationSasToken')]",
+                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template/azuredeploy-cosmos.json",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        },
+        {
+            "name": "votefrontend",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2016-09-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'votedatabase')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template/azuredeploy-aci.json",
                     "contentVersion": "1.0.0.0"
                 },
-                "parameters": {}
+                "parameters": {
+                    "cosmosDbKey": {
+                        "value": "[reference('votedatabase').outputs.dbkey.value]"
+                    },
+                    "cosmosDb": {
+                        "value": "[reference('votedatabase').outputs.dbendpoint.value]"
+                    }
+                }
             }
         }
-    ],
-    "outputs": {},
-    "functions": []
+    ]
 }
