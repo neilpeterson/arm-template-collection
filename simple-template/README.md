@@ -9,7 +9,7 @@ Create a resource group and deploy template.
 ```
 az group create --name output-template --location eastus
 
-az group deployment create --name output-template --resource-group output-template --template-file output-template/azuredeploy.json
+az group deployment create --resource-group output-template --template-file output-template/azuredeploy.json
 ```
 
 ## Output

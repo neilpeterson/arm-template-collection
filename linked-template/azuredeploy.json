@@ -5,7 +5,7 @@
     "variables": {},
     "resources": [
         {
-            "name": "votedatabase",
+            "name": "vote-database",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2016-09-01",
             "properties": {
@@ -17,11 +17,11 @@
             }
         },
         {
-            "name": "votefrontend",
+            "name": "vote-frontend",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2016-09-01",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', 'votedatabase')]"
+                "[resourceId('Microsoft.Resources/deployments', 'vote-database')]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -31,10 +31,10 @@
                 },
                 "parameters": {
                     "cosmosDbKey": {
-                        "value": "[reference('votedatabase').outputs.dbkey.value]"
+                        "value": "[reference('vote-database').outputs.dbkey.value]"
                     },
                     "cosmosDb": {
-                        "value": "[reference('votedatabase').outputs.dbendpoint.value]"
+                        "value": "[reference('vote-database').outputs.dbendpoint.value]"
                     }
                 }
             }
