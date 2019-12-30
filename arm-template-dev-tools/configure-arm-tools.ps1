@@ -25,4 +25,12 @@ Start-Process c:\temp\vscode.exe -ArgumentList "/verysilent /tasks=addtopath" -W
 
 Invoke-WebRequest https://github.com/microsoft/vscode-azurearmtools/releases/download/v0.8.3/azurerm-vscode-tools-0.8.3.vsix -OutFile c:\temp\azurerm-vscode-tools-0.8.3.vsix
 
+write-output "1111111"
+
+Start-Sleep -Seconds 30 
+
+write-output "1111111"
+
 & code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix
+
+write-output "1111111"
