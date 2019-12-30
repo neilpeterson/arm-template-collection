@@ -17,7 +17,7 @@
         "subnetName": "arm-template-dev-vnet",
         "nicName": "arm-template-dev-nic",
         "vmName": "arm-dev-vm",
-        "scriptURI" : "",
+        "scriptURI" : "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/arm-template-dev-vm/configure-arm-tools.ps1",
         "scriptName": "configure-arm-tools.ps1"
     },
     "resources": [
