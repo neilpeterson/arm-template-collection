@@ -17,7 +17,7 @@
         "subnetName": "arm-template-dev-vnet",
         "nicName": "arm-template-dev-nic",
         "vmName": "arm-dev-vm",
-        "scriptURI" : "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/arm-template-dev-vm/configure-arm-tools.ps1",
+        "scriptURI" : "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/arm-template-dev-tools/configure-arm-tools.ps1",
         "scriptName": "configure-arm-tools.ps1"
     },
     "resources": [
@@ -119,7 +119,8 @@
             ]
         },
         {
-            "name": "windowsVM1/customScript1",
+            
+            "name": "[concat(variables('vmName'), '/customScript1')]",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "apiVersion": "2018-06-01",
             "location": "[resourceGroup().location]",
