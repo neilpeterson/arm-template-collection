@@ -29,4 +29,6 @@ Invoke-WebRequest https://github.com/microsoft/vscode-azurearmtools/releases/dow
 
 # code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix
 
-& $codeCmd @('--install-extension', 'c:\temp\azurerm-vscode-tools-0.8.3.vsix') | Out-Null
+& code --install-extension ms-vscode.powershell
+
+# & $codeCmd @('--install-extension', 'c:\temp\azurerm-vscode-tools-0.8.3.vsix') | Out-Null
