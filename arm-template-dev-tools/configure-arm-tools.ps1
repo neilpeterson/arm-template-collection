@@ -17,20 +17,12 @@
     https://github.com/PowerShell/vscode-powershell/blob/master/scripts/Install-VSCode.ps1
 #>
 
-# New-Item -ItemType Directory c:\temp\ 
+New-Item -ItemType Directory c:\temp\ 
 
-# Invoke-WebRequest https://vscode-update.azurewebsites.net/latest/win32-x64/stable -OutFile c:\temp\vscode.exe
+Invoke-WebRequest https://vscode-update.azurewebsites.net/latest/win32-x64/stable -OutFile c:\temp\vscode.exe
 
-# Start-Process c:\temp\vscode.exe -ArgumentList "/verysilent /tasks=addtopath" -Wait
+Start-Process c:\temp\vscode.exe -ArgumentList "/verysilent /tasks=addtopath" -Wait
 
-# Invoke-WebRequest https://github.com/microsoft/vscode-azurearmtools/releases/download/v0.8.3/azurerm-vscode-tools-0.8.3.vsix -OutFile c:\temp\azurerm-vscode-tools-0.8.3.vsix
-
-# New-Item -ItemType File c:\temp\arm-tools-extension.ps1
-
-# Add-Content c:\temp\arm-tools-extension.ps1 "code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix"
-
-# Start-Process powershell.exe -Verb Runas -ArgumentList "-File c:\temp\arm-tools-extension.ps1"
+Invoke-WebRequest https://github.com/microsoft/vscode-azurearmtools/releases/download/v0.8.3/azurerm-vscode-tools-0.8.3.vsix -OutFile c:\temp\azurerm-vscode-tools-0.8.3.vsix
 
 Start-Process code -ArgumentList "--install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix --force"
-
-#code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix --force

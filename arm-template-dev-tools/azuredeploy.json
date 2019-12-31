@@ -136,7 +136,7 @@
                     "fileUris": [
                         "[variables('scriptURI')]"
                     ],
-                    "commandToExecute": "[concat('powershell -ExecutionPolicy Bypass -file ', variables('scriptName'))]"
+                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('scriptName'))]"
                 }
             }
         }
