@@ -31,6 +31,6 @@
 
 # Start-Process powershell.exe -Verb Runas -ArgumentList "-File c:\temp\arm-tools-extension.ps1"
 
-Start-Process "C:\Program Files\Microsoft VS Code\code.exe" -ArgumentList "--install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix --force"
+Start-Process code -ArgumentList "--install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix --force"
 
 #code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix --force
