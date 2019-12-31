@@ -30,4 +30,4 @@ Invoke-WebRequest https://github.com/microsoft/vscode-azurearmtools/releases/dow
 
 #>
 
-& c:\temp\azurerm-vscode-tools-0.8.3.vsix
+code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix 
