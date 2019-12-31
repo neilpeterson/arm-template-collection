@@ -25,10 +25,10 @@
 
 # Invoke-WebRequest https://github.com/microsoft/vscode-azurearmtools/releases/download/v0.8.3/azurerm-vscode-tools-0.8.3.vsix -OutFile c:\temp\azurerm-vscode-tools-0.8.3.vsix
 
-New-Item -ItemType File c:\temp\arm-tools-extension.ps1
+# New-Item -ItemType File c:\temp\arm-tools-extension.ps1
 
-Add-Content c:\temp\arm-tools-extension.ps1 "code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix"
+# Add-Content c:\temp\arm-tools-extension.ps1 "code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix"
 
-Start-Process powershell.exe -Verb Runas -ArgumentList "-File c:\temp\arm-tools-extension.ps1"
+# Start-Process powershell.exe -Verb Runas -ArgumentList "-File c:\temp\arm-tools-extension.ps1"
 
-# code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix
+code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix --force
