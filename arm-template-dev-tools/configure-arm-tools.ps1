@@ -17,6 +17,7 @@
     https://github.com/PowerShell/vscode-powershell/blob/master/scripts/Install-VSCode.ps1
 #>
 
+<#
 New-Item -ItemType Directory c:\temp\ 
 
 Invoke-WebRequest https://vscode-update.azurewebsites.net/latest/win32-x64/stable -OutFile c:\temp\vscode.exe
@@ -24,13 +25,6 @@ Invoke-WebRequest https://vscode-update.azurewebsites.net/latest/win32-x64/stabl
 Start-Process c:\temp\vscode.exe -ArgumentList "/verysilent /tasks=addtopath" -Wait
 
 Invoke-WebRequest https://github.com/microsoft/vscode-azurearmtools/releases/download/v0.8.3/azurerm-vscode-tools-0.8.3.vsix -OutFile c:\temp\azurerm-vscode-tools-0.8.3.vsix
-
-write-output "1111111"
-
-Start-Sleep -Seconds 30 
-
-write-output "1111111"
+#>
 
 & code --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix
-
-write-output "1111111"
