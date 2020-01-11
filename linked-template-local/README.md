@@ -9,7 +9,7 @@ Create a resource group and deploy template.
 ```
 az group create --name linked-template --location eastus
 
-az group deployment create --resource-group linked-template --template-file linked-template/azuredeploy.json
+az group deployment create --resource-group linked-template --template-file linked-template-simple/azuredeploy.json
 ```
 
 ## Output
