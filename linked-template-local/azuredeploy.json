@@ -4,9 +4,7 @@
     "parameters": {
     },
     "variables": {
-        "sas-token": "",
-        "artifacts": "[deployment().properties.templateLink.uri]",
-        "linked-template": "[uri(variables('artifacts'), concat('/artifacts/azuredeploy-aci.json', variables('sas-token')))]"
+        "sas-token": ""
     },
     "resources": [
         {
@@ -16,7 +14,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[variables('linked-template')]"
+                    "uri": "[concat(uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json'), variables('sas-token'))]"
                 }
             }
         }
