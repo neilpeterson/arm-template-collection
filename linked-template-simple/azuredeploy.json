@@ -11,8 +11,31 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-return-uri/azuredeploy-cosmos.json",
+                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template/azuredeploy-cosmos.json",
                     "contentVersion": "1.0.0.0"
+                }
+            }
+        },
+        {
+            "name": "vote-frontend",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2018-05-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'vote-database')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template/azuredeploy-aci.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "cosmosDbKey": {
+                        "value": "[reference('vote-database').outputs.dbkey.value]"
+                    },
+                    "cosmosDb": {
+                        "value": "[reference('vote-database').outputs.dbendpoint.value]"
+                    }
                 }
             }
         }
