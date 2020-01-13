@@ -9,7 +9,7 @@
     "outputs": {
         "output1": {
            "type": "string",
-           "value": "[deployment().properties.templateLink]"
+           "value": "[deployment().properties.templateLink.uri]"
         }
     }
 }
