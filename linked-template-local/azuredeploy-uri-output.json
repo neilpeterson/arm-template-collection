@@ -8,8 +8,8 @@
     "resources": [],
     "outputs": {
         "output1": {
-           "type": "object",
-           "value": "[deployment().properties]"
+           "type": "string",
+           "value": "[deployment().properties.templateLink]"
         }
     }
 }
