@@ -4,12 +4,17 @@
     "parameters": {
     },
     "variables": {
+        "uri": "[concat(uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json'))]"
     },
     "resources": [],
     "outputs": {
-        "output1": {
+        "template-link-uri": {
            "type": "string",
            "value": "[deployment().properties.templateLink.uri]"
+        },
+        "template-link-uri-artifacts": {
+           "type": "string",
+           "value": "[variables('uri')]"
         }
     }
 }
