@@ -6,7 +6,7 @@
     "variables": {
         "sas-token": "",
         "artifacts": "[deployment().properties.templateLink.uri]",
-        "linked-template": "[uri(variables('artifacts'), concat('artifacts/azuredeploy-aci.json', variables('sas-token')))]"
+        "linked-template": "[uri(variables('artifacts'), concat('/artifacts/azuredeploy-aci.json', variables('sas-token')))]"
     },
     "resources": [
         {
