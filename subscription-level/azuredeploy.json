@@ -1,0 +1,13 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources": [
+      {
+        "type": "Microsoft.Resources/resourceGroups",
+        "name": "from-template",
+        "apiVersion": "2018-05-01",
+        "location": "westus",
+        "properties": {}
+      }
+    ]
+  }
