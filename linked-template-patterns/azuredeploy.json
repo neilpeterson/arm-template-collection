@@ -7,10 +7,17 @@
         }
     },
     "variables": {
+        // deployment-one
         "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json')]",
+
+        // deployment-two
         "github-raw": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json",
+        
+        //deployment-three
         "artifacts-location": "[deployment().properties.templateLink.uri]",
         "uri-concat": "[uri(variables('artifacts-location'), 'artifacts/azuredeploy-aci.json')]",
+
+        // deployment-four
         "template": "https://templatestoragenepeters.blob.core.windows.net/",
         "artifacts-storage": "linked-tempaltes/azuredeploy-aci.json",
         "uri-storage": "[uri(variables('template'), concat(variables('artifacts-storage'), parameters('sasToken')))]"
