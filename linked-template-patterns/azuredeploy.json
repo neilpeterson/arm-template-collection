@@ -20,9 +20,6 @@
             "name": "deployment-one",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2017-05-10",
-            "dependsOn": [
-                "[reference('deployment-one')]"
-            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
