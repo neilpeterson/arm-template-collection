@@ -47,7 +47,7 @@
             }
         },
         {
-            "name": "deployment-three",
+            "name": "deployment-four",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2017-05-10",
             "properties": {
