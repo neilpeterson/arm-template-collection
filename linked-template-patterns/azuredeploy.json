@@ -1,34 +1,32 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
+    "parameters": {
+        "sasToken": {
+           "type": "string"
+        }
+    },
     "variables": {
         
-        // split on comma
+        // deployment-one: split on comma
         "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json')]",
 
-        // ?
+        // deployment-two: ?
         "github-raw": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json",
         
-        // split on comma
+        // deployment-three: split on comma
         "artifacts-location": "[deployment().properties.templateLink.uri]",
-        "uri-concat": "[uri(variables('artifacts-location'), 'artifacts/azuredeploy-aci.json')]"
+        "uri-concat": "[uri(variables('artifacts-location'), 'artifacts/azuredeploy-aci.json')]",
+
+        // deployment-four: ?
+        "template": "https://templatestoragenepeters.blob.core.windows.net/linked-tempaltes/azuredeploy-aci.json",
+        "artifacts-storage": "linked-tempaltes/azuredeploy-aci.json",
+        "uri-storage": "[concat(uri(variables('template'), variables('artifacts-storage')), parameters('sasToken'))]"
+
     },
     "resources": [
         {
             "name": "deployment-one",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2017-05-10",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json')]",
-                    "contentVersion": "1.0.0.0"
-                }
-            }
-        },
-        {
-            "name": "deployment-two",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2017-05-10",
             "dependsOn": [
@@ -43,19 +41,7 @@
             }
         },
         {
-            "name": "deployment-three",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2017-05-10",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json",
-                    "contentVersion": "1.0.0.0"
-                }
-            }
-        },
-        {
-            "name": "deployment-four",
+            "name": "deployment-two",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2017-05-10",
             "properties": {
@@ -67,13 +53,25 @@
             }
         },
         {
-            "name": "deployment-five",
+            "name": "deployment-three",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2017-05-10",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
                     "uri": "[variables('uri-concat')]",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        },
+        {
+            "name": "deployment-four",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('uri-storage')]",
                     "contentVersion": "1.0.0.0"
                 }
             }
