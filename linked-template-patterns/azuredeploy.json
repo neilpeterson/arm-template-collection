@@ -3,8 +3,14 @@
     "contentVersion": "1.0.0.0",
     "parameters": {},
     "variables": {
+        
+        // split on comma
         "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json')]",
+
+        // ?
         "github-raw": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json",
+        
+        // split on comma
         "artifacts-location": "[deployment().properties.templateLink.uri]",
         "uri-concat": "[uri(variables('artifacts-location'), 'artifacts/azuredeploy-aci.json')]"
     },
