@@ -11,7 +11,7 @@
         "github-raw": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json",
         "artifacts-location": "[deployment().properties.templateLink.uri]",
         "uri-concat": "[uri(variables('artifacts-location'), 'artifacts/azuredeploy-aci.json')]",
-        "template": "https://templatestoragenepeters.blob.core.windows.net/linked-tempaltes/azuredeploy-aci.json",
+        "template": "https://templatestoragenepeters.blob.core.windows.net/",
         "artifacts-storage": "linked-tempaltes/azuredeploy-aci.json",
         "uri-storage": "[concat(uri(variables('template'), variables('artifacts-storage')), parameters('sasToken'))]"
     },
