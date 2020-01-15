@@ -4,7 +4,9 @@
     "parameters": {},
     "variables": {
         "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json')]",
-        "github-raw": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json"
+        "github-raw": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json",
+        "artifacts-location": "[deployment().properties.templateLink.uri]",
+        "uri-concat": "[uri(variables('artifacts-location'), 'artifacts/azuredeploy-aci.json')]"
     },
     "resources": [
         {
@@ -16,21 +18,22 @@
                 "templateLink": {
                     "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json')]",
                     "contentVersion": "1.0.0.0"
-                },
-                "parameters": {}
+                }
             }
         },
         {
             "name": "deployment-two",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2017-05-10",
+            "dependsOn": [
+                "[reference('deployment-one')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
                     "uri": "[variables('uri')]",
                     "contentVersion": "1.0.0.0"
-                },
-                "parameters": {}
+                }
             }
         },
         {
@@ -42,8 +45,7 @@
                 "templateLink": {
                     "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json",
                     "contentVersion": "1.0.0.0"
-                },
-                "parameters": {}
+                }
             }
         },
         {
@@ -55,8 +57,19 @@
                 "templateLink": {
                     "uri": "[variables('github-raw')]",
                     "contentVersion": "1.0.0.0"
-                },
-                "parameters": {}
+                }
+            }
+        },
+        {
+            "name": "deployment-five",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('uri-concat')]",
+                    "contentVersion": "1.0.0.0"
+                }
             }
         }
     ],
