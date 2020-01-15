@@ -2,7 +2,10 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {},
-    "variables": {},
+    "variables": {
+        "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json')]",
+        "github-raw": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json"
+    },
     "resources": [
         {
             "name": "deployment-one",
@@ -16,8 +19,51 @@
                 },
                 "parameters": {}
             }
+        },
+        {
+            "name": "deployment-two",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('uri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {}
+            }
+        },
+        {
+            "name": "deployment-three",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template-patterns/artifacts/azuredeploy-aci.json",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {}
+            }
+        },
+        {
+            "name": "deployment-three",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2017-05-10",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('github-raw')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {}
+            }
         }
     ],
-    "outputs": {},
-    "functions": []
+    "outputs": {
+        "template-link-uri": {
+           "type": "string",
+           "value": "[deployment().properties.templateLink.uri]"
+        }
+    }
 }
