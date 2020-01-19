@@ -23,6 +23,8 @@ Invoke-WebRequest https://vscode-update.azurewebsites.net/latest/win32-x64/stabl
 
 Start-Process c:\temp\vscode.exe -ArgumentList "/verysilent /tasks=addtopath" -Wait
 
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+
 find-module az | install-module -force
 
 Get-AzVM
