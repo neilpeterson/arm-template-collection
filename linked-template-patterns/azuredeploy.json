@@ -68,6 +68,9 @@
                 "templateLink": {
                     "uri": "[variables('uri-storage')]",
                     "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    // Could we then porovide auto-completion for parameters
                 }
             }
         }

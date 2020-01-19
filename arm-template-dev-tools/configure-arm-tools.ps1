@@ -23,8 +23,12 @@ Invoke-WebRequest https://vscode-update.azurewebsites.net/latest/win32-x64/stabl
 
 Start-Process c:\temp\vscode.exe -ArgumentList "/verysilent /tasks=addtopath" -Wait
 
-Invoke-WebRequest https://github.com/microsoft/vscode-azurearmtools/releases/download/v0.8.3/azurerm-vscode-tools-0.8.3.vsix -OutFile c:\temp\azurerm-vscode-tools-0.8.3.vsix
+find-module az | install-module -force
 
-#Start-Process code -ArgumentList "--install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix --force"
+Get-AzVM
 
-& "C:\Program Files\Microsoft VS Code\bin\code" --install-extension c:\temp\azurerm-vscode-tools-0.8.3.vsix
+# $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
+
+# $storageAccountKeys = Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName
+
+# Invoke-Expression -Command ("cmdkey /add:$([System.Uri]::new($storageAccount.Context.FileEndPoint).Host) " + "/user:AZURE\$($storageAccount.StorageAccountName) /pass:$($storageAccountKeys[0].Value)")
