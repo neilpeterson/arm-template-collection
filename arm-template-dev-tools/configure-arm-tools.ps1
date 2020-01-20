@@ -17,6 +17,8 @@
     https://github.com/PowerShell/vscode-powershell/blob/master/scripts/Install-VSCode.ps1
 #>
 
+Connect-AzAccount -Identity
+
 $resourceGroupName = "vsix-packages"
 $storageAccountName = "nepetersvsixpackages"
 $fileShareName = "vsix-packages"
@@ -31,13 +33,13 @@ Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 
 find-module az | install-module -force
 
-Get-AzVM
 
-# $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
 
-# $storageAccountKeys = Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName
+$storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
 
-# Invoke-Expression -Command ("cmdkey /add:$([System.Uri]::new($storageAccount.Context.FileEndPoint).Host) " + "/user:AZURE\$($storageAccount.StorageAccountName) /pass:$($storageAccountKeys[0].Value)")
+$storageAccountKeys = Get-AzStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName
+
+Invoke-Expression -Command ("cmdkey /add:$([System.Uri]::new($storageAccount.Context.FileEndPoint).Host) " + "/user:AZURE\$($storageAccount.StorageAccountName) /pass:$($storageAccountKeys[0].Value)")
 
 $fileShare = Get-AzStorageShare -Context $storageAccount.Context | Where-Object { 
     $_.Name -eq $fileShareName -and $_.IsSnapshot -eq $false

@@ -18,7 +18,10 @@
 		"nicName": "arm-template-dev-nic",
 		"vmName": "arm-dev-vm",
 		"scriptURI": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/arm-template-dev-tools/configure-arm-tools.ps1",
-		"scriptName": "configure-arm-tools.ps1"
+		"scriptName": "configure-arm-tools.ps1",
+		"bootstrapRoleAssignmentId": "[guid(concat(resourceGroup().id, 'contributor'))]",
+		"identityName": "bootstrap-creds",
+		"contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
 	},
 	"resources": [{
 			"name": "[variables('pipName')]",
@@ -73,6 +76,26 @@
 			}
 		},
 		{
+			"type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+			"name": "bootstrap-creds",
+			"apiVersion": "2018-11-30",
+			"location": "[resourceGroup().location]"
+		},
+		{
+			"type": "Microsoft.Authorization/roleAssignments",
+			"apiVersion": "2018-09-01-preview",
+			"name": "[variables('bootstrapRoleAssignmentId')]",
+			"dependsOn": [
+				"[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
+			],
+			"properties": {
+				"roleDefinitionId": "[variables('contributorRoleDefinitionId')]",
+				"principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName')), '2015-08-31-preview').principalId]",
+				"scope": "[resourceGroup().id]",
+				"principalType": "ServicePrincipal"
+			}
+		},
+		{
 			"name": "[variables('vmName')]",
 			"type": "Microsoft.Compute/virtualMachines",
 			"apiVersion": "2019-07-01",
@@ -81,7 +104,10 @@
 				"[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
 			],
 			"identity": {
-				"type": "SystemAssigned"
+				"type": "UserAssigned",
+				"userAssignedIdentities": {
+					"[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]": {}
+				}
 			},
 			"properties": {
 				"hardwareProfile": {
