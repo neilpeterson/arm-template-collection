@@ -12,6 +12,7 @@
 		}
 	},
 	"variables": {
+		"storageName": "[concat('storage',uniqueString(resourceGroup().id))]",
 		"pipName": "arm-template-dev-pip",
 		"vnetName": "arm-template-dev-vnet",
 		"subnetName": "arm-template-dev-vnet",
@@ -23,11 +24,27 @@
 		"identityName": "bootstrap-creds",
 		"contributorRoleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]"
 	},
-	"resources": [{
+	"resources": [
+		{
+			"name": "[variables('storageName')]",
+			"type": "Microsoft.Storage/storageAccounts",
+			"apiVersion": "2015-06-15",
+			"location": "[resourceGroup().location]",
+			"tags": {
+				"displayName": "Storage Account / File Share"
+			},
+			"properties": {
+				"accountType": "Standard_LRS"
+			}
+		},
+		{
 			"name": "[variables('pipName')]",
 			"type": "Microsoft.Network/publicIPAddresses",
 			"apiVersion": "2018-08-01",
 			"location": "[resourceGroup().location]",
+			"tags": {
+				"displayName": "Public IP Address"
+			},
 			"properties": {
 				"publicIPAllocationMethod": "Dynamic"
 			}
@@ -37,6 +54,9 @@
 			"type": "Microsoft.Network/virtualNetworks",
 			"apiVersion": "2018-08-01",
 			"location": "[resourceGroup().location]",
+			"tags": {
+				"displayName": "Virtual Network"
+			},
 			"properties": {
 				"addressSpace": {
 					"addressPrefixes": [
@@ -56,6 +76,9 @@
 			"type": "Microsoft.Network/networkInterfaces",
 			"apiVersion": "2018-08-01",
 			"location": "[resourceGroup().location]",
+			"tags": {
+				"displayName": "Network Interface"
+			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]",
 				"[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]"
@@ -77,14 +100,20 @@
 		},
 		{
 			"type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-			"name": "bootstrap-creds",
+			"name": "[variables('identityName')]",
 			"apiVersion": "2018-11-30",
-			"location": "[resourceGroup().location]"
+			"location": "[resourceGroup().location]",
+			"tags": {
+				"displayName": "Managed Identity"
+			}
 		},
 		{
 			"type": "Microsoft.Authorization/roleAssignments",
 			"apiVersion": "2018-09-01-preview",
 			"name": "[variables('bootstrapRoleAssignmentId')]",
+			"tags": {
+				"displayName": "Role Assignment"
+			},
 			"dependsOn": [
 				"[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]"
 			],
@@ -100,6 +129,9 @@
 			"type": "Microsoft.Compute/virtualMachines",
 			"apiVersion": "2019-07-01",
 			"location": "[resourceGroup().location]",
+			"tags": {
+				"displayName": "Virtual Machine"
+			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
 			],
@@ -140,30 +172,14 @@
 			"resources": []
 		},
 		{
-			"type": "Microsoft.Compute/virtualMachines/extensions",
-			"name": "[concat(variables('vmName'),'/MSIWindowsExtension')]",
-			"apiVersion": "2019-03-01",
-			"location": "[resourceGroup().location]",
-			"dependsOn": [
-				"[concat('Microsoft.Compute/virtualMachines/', variables('vmName'))]"
-			],
-			"properties": {
-				"publisher": "Microsoft.ManagedIdentity",
-				"type": "ManagedIdentityExtensionForWindows",
-				"typeHandlerVersion": "1.0",
-				"autoUpgradeMinorVersion": true,
-				"settings": {
-					"port": 50342
-				},
-				"protectedSettings": {}
-			}
-		},
-		{
 
-			"name": "[concat(variables('vmName'), '/customScript1')]",
+			"name": "[concat(variables('vmName'), '/configure')]",
 			"type": "Microsoft.Compute/virtualMachines/extensions",
 			"apiVersion": "2018-06-01",
 			"location": "[resourceGroup().location]",
+			"tags": {
+				"displayName": "Custom Script Extension"
+			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Compute/virtualMachines', variables('vmName'))]"
 			],
@@ -176,11 +192,14 @@
 					"fileUris": [
 						"[variables('scriptURI')]"
 					],
-					"commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('scriptName'))]"
+					"commandToExecute": "[concat(
+						'powershell -ExecutionPolicy Unrestricted -file ', 
+						variables('scriptName'), 
+						' -resourceGroupName ', '[resourceGroup().name]', 
+						' -storageAccountName ', variables('storageName')
+					)]"
 				}
 			}
 		}
-	],
-	"outputs": {},
-	"functions": []
+	]
 }
