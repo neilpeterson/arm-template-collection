@@ -1,0 +1,41 @@
+{
+	"apiVersions": [
+		"2017-10-01"
+	],
+	"defaultValues": {
+		"$.properties.adminUserEnabled": false,
+		"$.properties.networkRuleSet.defaultAction": "Allow",
+		"$.properties.networkRuleSet.ipRules[*].action": "Allow",
+		"$.properties.networkRuleSet.virtualNetworkRules[*].action": "Allow"
+	},
+	"enumProperties": [
+		"$.properties.networkRuleSet.defaultAction",
+		"$.properties.networkRuleSet.ipRules[*].action",
+		"$.properties.networkRuleSet.virtualNetworkRules[*].action",
+		"$.properties.provisioningState",
+		"$.sku.name",
+		"$.sku.tier"
+	],
+	"readOnlyProperties": [
+		"$.properties.creationDate",
+		"$.properties.loginServer",
+		"$.properties.provisioningState",
+		"$.properties.status",
+		"$.sku.tier"
+	],
+	"requiredProperties": [
+		"$.location",
+		"$.properties.networkRuleSet.defaultAction",
+		"$.properties.networkRuleSet.ipRules[*].value",
+		"$.properties.networkRuleSet.virtualNetworkRules[*].id",
+		"$.properties.storageAccount.id",
+		"$.sku",
+		"$.sku.name"
+	],
+	"scopes": {
+		"getAll": "Subscription, ResourceGroup",
+		"get": "ResourceGroup",
+		"patch": "ResourceGroup",
+		"put": "ResourceGroup"
+	}
+}

@@ -1,0 +1,54 @@
+// docs - https://docs.microsoft.com/en-us/azure/templates/microsoft.containerinstance/2018-04-01/containergroups
+// schema - https://github.com/Azure/azure-resource-manager-schemas/blob/master/schemas/2018-04-01/Microsoft.ContainerInstance.json
+// swagger - https://github.com/Azure/azure-rest-api-specs/blob/master/specification/containerinstance/resource-manager/Microsoft.ContainerInstance/stable/2018-04-01/containerInstance.json
+
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "port": 80,
+        "cpu": 1,
+        "memory": 4,
+        "name": "test-container"
+    },
+    "resources": [
+        {
+            "name": "containerGroup1",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[variables('name')]",
+                        "properties": {
+                            "image": "containerImage",
+                            "ports": [
+                                {
+                                    "port": "[variables('port')]"
+                                }
+                            ],
+                            "resources": {
+                                "requests": {
+                                    "cpu": "[variables('cpu')]",
+                                    "memoryInGB": "[variables('memory')]"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "osType": "Linux",
+                "ipAddress": {
+                    "type": "Public",
+                    "ports": [
+                        {
+                            "protocol": "TCP",
+                            "port": "[variables('port')]"
+                        }
+                    ]
+                 }
+            }
+        }
+    ]
+}

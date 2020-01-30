@@ -3,7 +3,37 @@
     "contentVersion": "1.0.0.0",
     "parameters": {},
     "variables": {},
-    "resources": [],
+    "resources": [
+        {
+            "name": "cosmosDbAccount1",
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2015-04-08",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "kind": "GlobalDocumentDB",
+            "properties": {
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Eventual",
+                    "maxStalenessPrefix": 1,
+                    "maxIntervalInSeconds": 5
+                },
+                "locations": [
+                    {
+                        "locationName": "location1",
+                        "failoverPriority": 0
+                    }
+                ],
+                "databaseAccountOfferType": "Standard",
+                "ipRangeFilter": "ipRangeFilter",
+                "enableAutomaticFailover": true,
+                "capabilities": [
+                    {
+                        "name": "EnableTable"
+                    }
+                ]
+            }
+        }
+    ],
     "outputs": {},
     "functions": []
 }

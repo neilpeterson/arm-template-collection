@@ -192,12 +192,7 @@
 					"fileUris": [
 						"[variables('scriptURI')]"
 					],
-					"commandToExecute": "[concat(
-						'powershell -ExecutionPolicy Unrestricted -file ', 
-						variables('scriptName'), 
-						' -resourceGroupName ', '[resourceGroup().name]', 
-						' -storageAccountName ', variables('storageName')
-					)]"
+					"commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file ', variables('scriptName'), ' -resourceGroupName ', '[resourceGroup().name]', ' -storageAccountName ', variables('storageName'))]"
 				}
 			}
 		}

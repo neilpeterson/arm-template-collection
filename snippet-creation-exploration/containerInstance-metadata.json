@@ -1,0 +1,58 @@
+{
+    "apiVersions": [
+        "2018-02-01-preview",
+        "2018-04-01"
+    ],
+    "enumProperties": [
+        "$.properties.containers[*].properties.ports[*].protocol",
+        "$.properties.ipAddress.ports[*].protocol",
+        "$.properties.ipAddress.type",
+        "$.properties.osType",
+        "$.properties.restartPolicy"
+    ],
+    "potentialSecrets": [
+        "$.properties.imageRegistryCredentials[*].password",
+        "$.properties.imageRegistryCredentials[*].server",
+        "$.properties.volumes[*].azureFile.storageAccountKey",
+        "$.properties.volumes[*].azureFile.storageAccountName"
+    ],
+    "readOnlyProperties": [
+        "$.properties.containers[*].properties.instanceView",
+        "$.properties.instanceView",
+        "$.properties.ipAddress.fqdn",
+        "$.properties.ipAddress.ip",
+        "$.properties.provisioningState"
+    ],
+    "requiredProperties": [
+        "$.properties",
+        "$.properties.containers",
+        "$.properties.containers[*].name",
+        "$.properties.containers[*].properties",
+        "$.properties.containers[*].properties.environmentVariables[*].name",
+        "$.properties.containers[*].properties.environmentVariables[*].value",
+        "$.properties.containers[*].properties.image",
+        "$.properties.containers[*].properties.ports[*].port",
+        "$.properties.containers[*].properties.resources",
+        "$.properties.containers[*].properties.resources.requests",
+        "$.properties.containers[*].properties.resources.requests.cpu",
+        "$.properties.containers[*].properties.resources.requests.memoryInGB",
+        "$.properties.containers[*].properties.volumeMounts[*].mountPath",
+        "$.properties.containers[*].properties.volumeMounts[*].name",
+        "$.properties.imageRegistryCredentials[*].server",
+        "$.properties.imageRegistryCredentials[*].username",
+        "$.properties.ipAddress.ports",
+        "$.properties.ipAddress.ports[*].port",
+        "$.properties.ipAddress.type",
+        "$.properties.osType",
+        "$.properties.volumes[*].azureFile.shareName",
+        "$.properties.volumes[*].azureFile.storageAccountName",
+        "$.properties.volumes[*].gitRepo.repository",
+        "$.properties.volumes[*].name"
+    ],
+    "scopes": {
+        "getAll": "Subscription, ResourceGroup",
+        "get": "ResourceGroup",
+        "patch": "ResourceGroup",
+        "put": "ResourceGroup"
+    }
+}
