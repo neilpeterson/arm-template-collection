@@ -14,7 +14,7 @@ if (Test-Path $schemaFiles) {
 # Create CSV
 New-Item $outPutLocation -ItemType File
 
-# Get list of cached resource schemas (derived from file name)
+# Create empty object
 $resourceNames = New-Object System.Collections.Generic.List[System.Object]
 
 foreach ($item in $schems) {
