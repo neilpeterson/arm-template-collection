@@ -61,5 +61,3 @@ foreach ($item2 in $resourceNames) {
         Add-Content $outPutLocation "$namespace,$resource,$item2,No"
     }
 }
-
-# test
