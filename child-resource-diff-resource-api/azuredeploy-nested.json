@@ -1,25 +1,25 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "variables": {
+        "name": "mysqlservernepeters"
+    },
     "resources": [
         {
-            "name": "mySQLServer",
+            "name": "[variables('name')]",
             "type": "Microsoft.Sql/servers",
             "apiVersion": "2014-04-01",
             "location": "[resourceGroup().location]",
-            "tags": {
-                "displayName": "sqlServer1"
-            },
             "properties": {
                 "administratorLogin": "adminUsername",
-                "administratorLoginPassword": "adminPassword"
+                "administratorLoginPassword": "Password2020!"
             },
             "resources": [
                 {
                     "type": "firewallRules",
                     "apiVersion": "2015-05-01-preview",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Sql/servers', 'mySQLServer')]"
+                        "[resourceId('Microsoft.Sql/servers', variables('name'))]"
                     ],
                     "location": "[resourceGroup().location]",
                     "name": "AllowAllWindowsAzureIps",
@@ -29,6 +29,6 @@
                     }
                 }
             ]
-        }      
+        }
     ]
 }
