@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "variables": {
+        "appPlan": "plan-nepeters-001",
+        "appName": "app-nepeters-001"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2018-02-01",
+        "name": "[variables('appPlan')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "S1"
+        },
+        "kind": "linux",
+        "properties":{
+          "reserved":true
+        }
+      },
+      {
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2016-03-01",
+        "name": "[variables('appName')]",
+        "location": "[resourceGroup().location]",
+        "kind": "app",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverfarms', variables('appPlan'))]"
+        ],
+        "properties": {
+          "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appPlan'))]",
+          "siteConfig": {
+              "linuxFxVersion": "php|7.0"
+            }
+        }
+      }
+    ]
+  }

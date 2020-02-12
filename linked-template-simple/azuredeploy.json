@@ -19,7 +19,7 @@
         {
             "name": "vote-frontend",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "2017-05-10",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', 'vote-database')]"
             ],

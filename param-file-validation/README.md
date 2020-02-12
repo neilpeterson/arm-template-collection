@@ -9,6 +9,5 @@ Create a resource group and validate deployment.
 ```
 az group create --name param-file-validate --location eastus
 
-Test-AzResourceGroupDeployment -ResourceGroupName validate -TemplateFile ./param-file-validation/azuredeploy.json -TemplateParameterFile ./param-file-validation/azuredeploy.parameters.
-json
+az group deployment create --resource-group param-file-validate --template-file param-file-validation/azuredeploy.json --parameters param-file-validation/azuredeploy.parameters.json
 ```
