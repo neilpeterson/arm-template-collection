@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources": [
+        {
+            "apiVersion": "2017-05-10",
+            "name": "demo-nested-issues",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "param-nested": {
+                            "type": "securestring",
+                            "defaultValue": "test123"
+                        }
+                    },
+                    "variables": {
+                        "var-nested": "var-nested"
+                    },
+                    "resources": [
+                    ],
+                    "outputs": {
+                        "param-nested": {
+                            "type": "secureString",
+                            "value": "[parameters('param-nested')]"
+                        },
+                        "var-nested": {
+                            "type": "string",
+                            "value": "[variables('var-nested')]"
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
