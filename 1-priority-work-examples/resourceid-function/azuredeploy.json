@@ -34,12 +34,11 @@
                 "accountType": "Standard_LRS"
             },
             "dependsOn": [
-                // Offer up type and name .via Intellisense
+                // Provide IntelliSense to help build this expression using the resourceId function
+                // Derive a list of types and names from the current template
                 "[resourceId('Microsoft.Storage/storageAccounts', 'nepetersone')]",
 
-                // How would this work with an expression containing a variable / param?
-                // Offer up types found in template + derive the name value from the resource
-                // So this list would be {'nepetersone', '[variables('name')]'}
+                // It seems like we should also be able to derive this from the current template
                 "[resourceId('Microsoft.Storage/storageAccounts', variables('name'))]"
             ]
         }

@@ -3,9 +3,10 @@
     "contentVersion": "1.0.0.0",
     "resources": [],
     "outputs": {
-        // Provide intelliSense on all subscription() properties
-        // Should be happening, but is not
+
+        // I think this one is a bug, looks like we should be handling these
         // https://github.com/microsoft/vscode-azurearmtools/blob/master/assets/ExpressionMetadata.json#L659
+        
         "subscriptionName": {
             "type": "string",
             "value": "[subscription().displayName]"
@@ -30,7 +31,5 @@
             "type": "string",
             "value": "[subscription().tenantid]"
         }
-    },
-    "functions": [
-    ]
+    }
 }
