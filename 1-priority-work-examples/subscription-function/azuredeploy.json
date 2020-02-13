@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources": [],
+    "outputs": {
+        "subscriptionName": {
+            "type": "string",
+            "value": "[subscription().displayName]"
+        },
+        "subscriptionId": {
+            "type": "string",
+            "value": "[subscription().Id]"
+        },
+        "managementTenant": {
+            "type": "Array",
+            "value": "[subscription().managedByTenants]"
+        },
+        "state": {
+            "type": "string",
+            "value": "[subscription().state]"
+        },
+        "id": {
+            "type": "string",
+            "value": "[subscription().subscriptionId]"
+        },
+        "tenant": {
+            "type": "string",
+            "value": "[subscription().tenantid]"
+        }
+    },
+    "functions": [
+    ]
+}

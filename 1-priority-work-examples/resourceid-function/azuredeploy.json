@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+    },
+    "variables": {
+        "name": "nepeterstwo"
+    },
+    "resources": [
+        {
+            "name": "nepetersone",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "accountType": "Standard_LRS"
+            }
+        },
+        {
+            "name": "[variables('name')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "accountType": "Standard_LRS"
+            }
+        },
+        {
+            "name": "nepetersthree",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2015-06-15",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "accountType": "Standard_LRS"
+            },
+            "dependsOn": [
+                // Offer up type and name .via Intellisense
+                //"[resourceId('Microsoft.Storage/storageAccounts', 'nepetersone')]",
+
+                // How would this work with an expression containing a variable / param?
+                // Offer up types found in template + derive the name value from the resource
+                // So this list would be {'nepetersone', '[variables('name')]'}
+                //"[resourceId('Microsoft.Storage/storageAccounts', variables('name'))]",
+
+                // Specific to depenencies, can we just offer a ctl-space opton for precreated dependencies
+                // So for this template, ctl-space would pop up this list
+                // "nepetersone"
+                // "[variables('name')]"
+            ]
+        }
+    ],
+    "outputs": {
+        "resourceId": {
+            "type": "string",
+            // Same IntelliSense experiance everywhere
+            "value": "[resourceId('Microsoft.Storage/storageAccounts', 'nepetersone')]"
+        }
+    },
+    "functions": [
+    ]
+}
