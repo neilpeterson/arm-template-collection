@@ -49,7 +49,5 @@
             // Same IntelliSense experiance everywhere
             "value": "[resourceId('Microsoft.Storage/storageAccounts', 'nepetersone')]"
         }
-    },
-    "functions": [
-    ]
+    }
 }
