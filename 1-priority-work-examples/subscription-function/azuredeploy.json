@@ -3,6 +3,9 @@
     "contentVersion": "1.0.0.0",
     "resources": [],
     "outputs": {
+        // Provide intelliSense on all subscription() properties
+        // Should be happening, but is not
+        // https://github.com/microsoft/vscode-azurearmtools/blob/master/assets/ExpressionMetadata.json#L659
         "subscriptionName": {
             "type": "string",
             "value": "[subscription().displayName]"

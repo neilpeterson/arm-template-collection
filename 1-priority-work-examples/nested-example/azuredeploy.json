@@ -28,10 +28,12 @@
                     "outputs": {
                         "param-nested": {
                             "type": "secureString",
+                            // params defined in nested template are not validated, template is fine
                             "value": "[parameters('param-nested')]"
                         },
                         "var-nested": {
                             "type": "string",
+                            // variables defined in nested template are not validated, template is fine
                             "value": "[variables('var-nested')]"
                         }
                     }

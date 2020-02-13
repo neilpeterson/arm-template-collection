@@ -15,6 +15,9 @@
                 "administratorLoginPassword": "Password2020!"
             },
             "resources": [
+                // Note here that the resource is non-valid
+                // Change the apiVersion to match the SQL server apiVersion and this fixes
+                // Also note, ctl-space only produces one apiVersion, which does match parent resource
                 {
                     "type": "firewallRules",
                     "apiVersion": "2015-05-01-preview",

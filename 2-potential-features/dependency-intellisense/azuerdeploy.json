@@ -37,7 +37,11 @@
                 // Can we offer a ctl-space option for precreated dependencies
                 // So for this template, ctl-space would pop up this list
                 "nepetersone",
-                "[variables('name')]"
+                "[variables('name')]",
+
+                // When multiple resources are detected with identical names, offer up using the resourceId
+                "[resourceId('Microsoft.Storage/storageAccounts', 'nepetersone')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('name'))]"
             ]
         }
     ]

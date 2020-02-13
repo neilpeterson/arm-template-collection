@@ -35,17 +35,12 @@
             },
             "dependsOn": [
                 // Offer up type and name .via Intellisense
-                //"[resourceId('Microsoft.Storage/storageAccounts', 'nepetersone')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', 'nepetersone')]",
 
                 // How would this work with an expression containing a variable / param?
                 // Offer up types found in template + derive the name value from the resource
                 // So this list would be {'nepetersone', '[variables('name')]'}
-                //"[resourceId('Microsoft.Storage/storageAccounts', variables('name'))]",
-
-                // Specific to depenencies, can we just offer a ctl-space opton for precreated dependencies
-                // So for this template, ctl-space would pop up this list
-                // "nepetersone"
-                // "[variables('name')]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('name'))]"
             ]
         }
     ],
