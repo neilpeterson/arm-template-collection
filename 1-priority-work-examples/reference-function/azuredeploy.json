@@ -3,10 +3,13 @@
     "contentVersion": "1.0.0.0",
     "resources": [
         {
-            "name": "nepetersStorageOne",
+            "name": "nepetersStorageTwo",
             "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2019-06-01",
+            "apiVersion": "2015-06-15",
             "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "storageaccount1"
+            },
             "properties": {
                 "accountType": "Standard_LRS"
             }
@@ -14,11 +17,16 @@
     ],
     "outputs": {
         "storageUri": {
-           "type": "string",
-           // Unfortunatley it does not look like output is defined in the schema (primaryEndpoints)
-           // However is in the OpenAPI
-           // https://github.com/Azure/azure-rest-api-specs/blob/master/specification/storage/resource-manager/Microsoft.Storage/stable/2019-06-01/storage.json#L1975
-           "value": "[reference('nepetersStorageOne', '2019-06-01').primaryEndpoints['blob']]"
+            "type": "string",
+            // I'm guessing we can get the resource identifier, and apiVersion from the current template?
+            // The object return value will be more difficult. These are not specified in the schema but are in the OpenAPI spec
+            // https://github.com/Azure/azure-rest-api-specs/blob/master/specification/storage/resource-manager/Microsoft.Storage/stable/2019-06-01/storage.json#L1975
+            "value": "[reference('nepetersStorageTwo', '2015-06-15').primaryEndpoints.blob]"
+        },
+        "storageUri2": {
+            "type": "string",
+            // This expression may also include the resourecId function
+            "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', 'nepetersStorageTwo'), '2015-06-15').primaryEndpoints.blob]"
         }
     }
 }
