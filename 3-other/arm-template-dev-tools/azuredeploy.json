@@ -18,7 +18,7 @@
 		"subnetName": "arm-template-dev-vnet",
 		"nicName": "arm-template-dev-nic",
 		"vmName": "arm-dev-vm",
-		"scriptURI": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/arm-template-dev-tools/configure-arm-tools.ps1",
+		"scriptURI": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/3-other/arm-template-dev-tools/configure-arm-tools.ps1",
 		"scriptName": "configure-arm-tools.ps1",
 		"bootstrapRoleAssignmentId": "[guid(concat(resourceGroup().id, 'contributor'))]",
 		"identityName": "bootstrap-creds",
