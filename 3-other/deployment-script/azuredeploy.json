@@ -1,0 +1,49 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "identity": {
+            "type": "string",
+            "defaultValue": "/subscriptions/e4272367-5645-4c4e-9c67-3b74b59a6982/resourceGroups/Contoso/providers/Microsoft.ManagedIdentity/userAssignedIdentities/alex-test-identity"
+        },
+        "timestamp": {
+            "type": "string",
+            "defaultValue": "[utcNow()]"
+        }
+    },
+    "variables": {
+        "scriptName": "[concat('createCert', parameters('timestamp'))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "name": "[variables('scriptName')]", // can use newGuid() to save each execution separately
+            "apiVersion": "2019-10-01-preview",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell", // option for "AzureCLI"
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[parameters('identity')]": {} // resourceId of the managed identity
+                }
+            },
+            "properties": {
+                "azPowerShellVersion": "2.7",
+                "primaryScriptUri": 
+                    "https://raw.githubusercontent.com/alex-frankel/VbDemos/master/misc/create-cert.ps1",
+                "arguments": 
+                    "-vaultName alex-test-kv -certificateName test-cert -subjectName 'CN=contoso.com'",
+                "timeout": "PT30M",
+                "retentionInterval": "P1D", // time until deploymentScript will delete itself
+                "cleanupPreference": "OnSuccess", // option for "Always", "OnExpiration"
+                "forceUpdateTag": "[parameters('timestamp')]" // utcNow()
+            }
+        }
+    ],
+    "outputs": {
+        "result": {
+            "type": "string",
+            "value": "[reference(variables('scriptName')).outputs.certThumbprint]" // declared outputs can be used later            
+        }
+    }
+}
