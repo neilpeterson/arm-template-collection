@@ -70,7 +70,7 @@
                     "contentVersion": "1.0.0.0"
                 },
                 "parameters": {
-                    // Could we then porovide auto-completion for parameters
+                    // Could we then provide auto-completion for parameters
                 }
             }
         }

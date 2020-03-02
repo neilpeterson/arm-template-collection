@@ -13,6 +13,10 @@
                 "templateLink": {
                     "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template/azuredeploy-cosmos.json",
                     "contentVersion": "1.0.0.0"
+                },
+                "parametersLink": {
+                    "uri": "",
+                    "contentVersion": "1.0.0.0"
                 }
             }
         },
