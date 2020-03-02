@@ -1,3 +1,9 @@
+// az group deployment create --resource-group test222 --template-uri https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-priority-work-examples/linked-template/azuredeploy.json --handle-extended-json-format
+// How do we derive file location on disk (uri function only returns a value when run from URI)
+// How far deep do we go with linked tempaltes
+// How do we handle parameters file vs. inline parameter values
+// How do we handle paramerter files + intline parameter values
+
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
@@ -11,11 +17,12 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template/azuredeploy-cosmos.json",
+                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-priority-work-examples/linked-template/azuredeploy-cosmos.json",
                     "contentVersion": "1.0.0.0"
                 },
+                // Paramaters File
                 "parametersLink": {
-                    "uri": "",
+                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-priority-work-examples/linked-template/azuredeploy-cosmos.parameters.json",
                     "contentVersion": "1.0.0.0"
                 }
             }
@@ -30,9 +37,11 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/linked-template/azuredeploy-aci.json",
+                    // "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-priority-work-examples/linked-template/azuredeploy-aci.json",
+                    "uri": "[uri(deployment().properties.templateLink.uri, '/azuredeploy-aci.json')]",
                     "contentVersion": "1.0.0.0"
                 },
+                // Inline Parameters
                 "parameters": {
                     "cosmosDbKey": {
                         "value": "[reference('vote-database').outputs.dbkey.value]"
