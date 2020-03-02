@@ -1,4 +1,4 @@
-// az group deployment create --resource-group test222 --template-uri https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-priority-work-examples/linked-template/azuredeploy.json --handle-extended-json-format
+// az group deployment create --resource-group test444 --template-uri https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-priority-work-examples/linked-template/azuredeploy.json --handle-extended-json-format
 // How do we derive file location on disk (uri function only returns a value when run from URI)
 // How far deep do we go with linked tempaltes
 // How do we handle parameters file vs. inline parameter values
@@ -11,7 +11,7 @@
     "variables": {},
     "resources": [
         {
-            "name": "vote-database",
+            "name": "vote-database-002",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "properties": {
@@ -38,7 +38,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     // "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-priority-work-examples/linked-template/azuredeploy-aci.json",
-                    "uri": "[uri(deployment().properties.templateLink.uri, 'artifacts/azuredeploy-aci.json')]",
+                    "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-aci.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 // Inline Parameters
