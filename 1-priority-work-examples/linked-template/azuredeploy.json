@@ -37,8 +37,8 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    // "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-priority-work-examples/linked-template/azuredeploy-aci.json",
-                    "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-aci.json')]",
+                    "uri": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-priority-work-examples/linked-template/azuredeploy-aci.json",
+                    // "uri": "[uri(deployment().properties.templateLink.uri, 'azuredeploy-aci.json')]",
                     "contentVersion": "1.0.0.0"
                 },
                 // Inline Parameters
