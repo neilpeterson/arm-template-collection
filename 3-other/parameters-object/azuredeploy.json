@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "rgNames": {
+            "type": "array"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "eastus",
+            "name": "[parameters('rgNames')[copyIndex()]]",
+            "copy": {
+                "name": "rgCopy",
+                "count": "[length(parameters('rgNames'))]"
+            }
+        }
+    ]
+}
