@@ -1,1 +1,1 @@
-Test-AzResourceGroupDeployment -ResourceGroupName test123 -TemplateFile azuredeploy.json -TemplateParameterFile azuredeploy.parameters.json
+Test-AzResourceGroupDeployment -ResourceGroupName deploymentTest -TemplateFile azuredeploy.json

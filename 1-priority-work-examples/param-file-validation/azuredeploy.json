@@ -61,8 +61,7 @@
     "outputs": {
         "deploymentUri": {
            "type": "string",
-           "value": "
-           [variables('deployment')]"
+           "value": "[variables('deployment')]"
         }
     },
     "functions": []
