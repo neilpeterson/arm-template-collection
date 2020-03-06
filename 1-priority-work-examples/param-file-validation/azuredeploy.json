@@ -16,7 +16,9 @@
             }
         }
     },
-    "variables": {},
+    "variables": {
+        "deployment": "[deployment().properties.templateLink.uri]"
+    },
     "resources": [
         {
             "name": "containerGroup1",
@@ -56,6 +58,12 @@
             }
         }
     ],
-    "outputs": {},
+    "outputs": {
+        "deploymentUri": {
+           "type": "string",
+           "value": "
+           [variables('deployment')]"
+        }
+    },
     "functions": []
 }
