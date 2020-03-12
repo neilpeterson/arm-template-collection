@@ -1,0 +1,159 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "nsgName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Network security group"
+        }
+      },
+      "addsAsgId": {
+        "type": "string",
+        "metadata": {
+          "description": "Resource ID of the ADDS Application security group"
+        }
+      },
+      "asgName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the Application security group"
+        }
+      },
+      "managementClientPrefixes": {
+        "type": "array",
+        "metadata": {
+          "description": "Array of the ip prefixes that should be able to manage the domain controller"
+        }
+      },
+      "location": {
+        "defaultValue": "[resourceGroup().location]",
+        "type": "string",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      }
+    },
+    "variables": {
+      "asgId": "[resourceId('Microsoft.Network/applicationSecurityGroups',parameters('asgName'))]"
+    },
+    "resources": [
+      {
+        "comments": "Application Security Group",
+        "name": "[parameters('asgName')]",
+        "type": "Microsoft.Network/applicationSecurityGroups",
+        "apiVersion": "2017-10-01",
+        "location": "[parameters('location')]",
+        "properties": {
+        }
+      },
+      {
+        "name": "[parameters('nsgName')]",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "apiVersion": "2017-09-01",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+          "[parameters('asgName')]"
+        ],
+        "properties": {
+          "securityRules": [
+            {
+              "name": "120_Allow-RDP-Inside",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "access": "Allow",
+                "priority": 120,
+                "direction": "Inbound",
+                "sourceAddressPrefixes": "[parameters('managementClientPrefixes')]",
+                "destinationApplicationSecurityGroups": [
+                  {
+                    "id": "[variables('asgId')]"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "130_Allow-RPC-fromADDS",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "135",
+                "access": "Allow",
+                "priority": 130,
+                "direction": "Inbound",
+                "sourceApplicationSecurityGroups": [
+                  {
+                    "id": "[parameters('addsAsgId')]"
+                  }
+                ],
+                "destinationApplicationSecurityGroups": [
+                  {
+                    "id": "[variables('asgId')]"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "131_Allow-RPCDynamic-fromADDS",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "49152-65535",
+                "access": "Allow",
+                "priority": 131,
+                "direction": "Inbound",
+                "sourceApplicationSecurityGroups": [
+                  {
+                    "id": "[parameters('addsAsgId')]"
+                  }
+                ],
+                "destinationApplicationSecurityGroups": [
+                  {
+                    "id": "[variables('asgId')]"
+                  }
+                ]
+              }
+            },
+            {
+              "name": "4000_Deny-Other_Tcp",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 4000,
+                "direction": "Inbound",
+                "sourceAddressPrefixes": [
+                ],
+                "destinationAddressPrefixes": [
+                ]
+              }
+            },
+            {
+              "name": "4001_Deny-Other_Udp",
+              "properties": {
+                "protocol": "Udp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "*",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Deny",
+                "priority": 4001,
+                "direction": "Inbound",
+                "sourceAddressPrefixes": [
+                ],
+                "destinationAddressPrefixes": [
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outputs": {
+    }
+  }
