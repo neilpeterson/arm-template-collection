@@ -2,581 +2,141 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "Environnement": {
-            "type": "string"
-        },
-        "SQLadminPassword": {
-            "type": "securestring"
+      "sqlServerName": {
+        "type": "string",
+        "metadata": {
+          "description": "Name of the SQL server"
         }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "sqlAdministratorLogin": {
+        "type": "string",
+        "metadata": {
+          "description": "The administrator username of the SQL Server."
+        }
+      },
+      "sqlAdministratorLoginPassword": {
+        "type": "securestring",
+        "metadata": {
+          "description": "The administrator password of the SQL Server."
+        }
+      },
+      "omsWorkspaceName": {
+        "type": "string",
+        "defaultValue": "[concat('omsworkspace', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Log Analytics workspace name"
+        }
+      },
+      "workspaceRegion": {
+        "type": "string",
+        "defaultValue": "East US",
+        "allowedValues": [
+          "Southeast Asia",
+          "Australia Southeast",
+          "West Europe",
+          "East US"
+        ],
+        "metadata": {
+          "description": "Specify the region for your OMS workspace"
+        }
+      },
+      "omsSku": {
+        "type": "string",
+        "defaultValue": "free",
+        "allowedValues": [
+          "free",
+          "standalone",
+          "pernode"
+        ],
+        "metadata": {
+          "description": "Select the SKU for OMS workspace"
+        }
+      }
     },
     "variables": {
-        "sites_Veille_name": "[concat('Veille-', parameters('Environnement'))]",
-        "StorResourcegroup": "[concat('appsstorage-rg-', parameters('Environnement'))]",
-        "sites_AppsInterne_name": "[concat('AppsInterne-', parameters('Environnement'))]",
-        "sites_Veille_func_name": "[concat('Veille-func-', parameters('Environnement'))]",
-        "serverfarms_ASP_Standard_name": "[concat('ASP-AppsStandard-', parameters('Environnement'))]",
-        "serverfarms_FunctionApp_name": "[concat('ASP-FunctionApp-', parameters('Environnement'))]",
-        "storageAccounts_veillefunc_name": "[concat('storveillefunc', parameters('Environnement'))]",
-        "storageAccounts_appsinterne_name": "[concat('storappsinterne', parameters('Environnement'))]"
+      "diagnosticSettingsName": "SQLSecurityAuditEvents_3d229c42-c7e7-4c97-9a99-ec0d0d8b86c1"
     },
     "resources": [
-        {
-            "type": "Microsoft.Web/serverfarms",
-            "apiVersion": "2016-09-01",
-            "name": "[variables('Serverfarms_ASP_Standard_name')]",
-            "location": "[resourceGroup().location]",
-            "sku": "[if(equals(parameters('Environnement'), 'prd'),json('{\"name\":\"B1\",\"tier\":\"Basic\",\"size\":\"B1\",\"family\":\"B\",\"capacity\": 1}'),json('{\"name\":\"F1\",\"tier\":\"Free\",\"size\":\"F1\",\"family\":\"F\",\"capacity\": 0}'))]",
-            "kind": "app",
-            "properties": {
-                "name": "[variables('Serverfarms_ASP_Standard_name')]",
-                "perSiteScaling": false,
-                "reserved": false,
-                "targetWorkerCount": 0,
-                "targetWorkerSizeId": 0
-            },
-            "tags": {
-                "Environnement": "[parameters('Environnement')]"
-            }
-        },
-        {
-            "type": "Microsoft.Web/serverfarms",
-            "apiVersion": "2016-09-01",
-            "name": "[variables('Serverfarms_FunctionApp_name')]",
-            "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Y1",
-                "tier": "Dynamic",
-                "size": "Y1",
-                "family": "Y",
-                "capacity": 0
-            },
-            "kind": "functionapp",
-            "properties": {
-                "name": "[variables('serverfarms_FunctionApp_name')]",
-                "perSiteScaling": false,
-                "reserved": false,
-                "targetWorkerCount": 0,
-                "targetWorkerSizeId": 0
-            },
-            "tags": {
-                "Environnement": "[parameters('Environnement')]"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites",
-            "apiVersion": "2016-08-01",
-            "name": "[variables('Sites_AppsInterne_name')]",
-            "location": "[resourceGroup().location]",
-            "Identity": {
-                "type": "SystemAssigned"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_ASP_Standard_name'))]"
-            ],
-            "tags": {
-                "Environnement": "[parameters('Environnement')]"
-            },
-            "kind": "app",
-            "properties": {
-                "enabled": true,
-                "hostNameSslStates": [
-                    {
-                        "name": "[concat('appsinterne-',  parameters('Environnement'), '.azurewebsites.net')]",
-                        "sslState": "Disabled",
-                        "hostType": "Standard"
-                    },
-                    {
-                        "name": "[concat('appsinterne-',  parameters('Environnement'), '.scm.azurewebsites.net')]",
-                        "sslState": "Disabled",
-                        "hostType": "Repository"
-                    }
-                ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_ASP_Standard_name'))]",
-                "siteConfig": {
-                    "appSettings": [
-                        {
-                            "name": "AzureBlobFileSystem.ConnectionString:media",
-                            "value": "[concat( 'DefaultEndpointsProtocol=https;AccountName=', variables('storageAccounts_appsinterne_name') ,';AccountKey=' , listKeys(resourceId( variables('StorResourceGroup'),'Microsoft.Storage/storageAccounts', variables('storageAccounts_appsinterne_name')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
-                        },
-                        {
-                            "name": "AzureBlobFileSystem.RootUrl:media",
-                            "value": "[concat( 'https://' , variables('storageAccounts_appsinterne_name'), '.blob.core.windows.net')]"
-                        },
-                        {
-                            "Name": "AzureBlobFileSystem.ContainerName:media",
-                            "value": "appsinterne"
-                        },
-                        {
-                            "name": "VeilleDeLien.UrlBase",
-                            "value": "[concat('https://veille-', parameters('Environnement'), '.azurewebsites.net')]"
-                        },
-                        {
-                            "name": "GuichetUnique.UrlBase",
-                            "value": "[concat('https://gummaster-', parameters('environnement'), '.azurewebsites.net/umbraco')]"
-                        },
-                        {
-                            "name": "WEBSITE_DISABLE_OVERLAPPED_RECYCLING",
-                            "value": "1"
-                        },
-                        {
-                            "name": "Serilog.EnvoyerLogErreurA",
-                            "value": "ateam@soquij.qc.ca"
-                        },
-                        {
-                            "name": "VeilleDeLien.CodeSource",
-                            "value": "SITEGUM"
-                        },
-                        {
-                            "name": "Serilog.CurrentUrl",
-                            "value": "[variables('sites_AppsInterne_name')]"
-                        },
-                        {
-                            "name": "Serilog.ErrorLevel",
-                            "value": "Error"
-                        },
-                        {
-                            "name": "Serilog.MessageTemplate",
-                            "value": "Heure de l'erreur : {Timestamp:yyyy-MM-dd  HH:mm:ss} {NewLine}{NewLine}Endroit ou l'erreur s'est produite : {NewLine}{NewLine}{SourceContext}{NewLine}{NewLine}Message de l'erreur : {NewLine}{Message}{NewLine}{NewLine}Message détaillé : {NewLine}{Exception}"
-                        },
-                        {
-                            "name": "WEBSITE_TIME_ZONE",
-                            "value": "Eastern Standard Time"
-                        }
-                    ],
-                    "connectionStrings": [
-                        {
-                            "name": "umbracoDbDSN",
-                            "connectionString": "[concat( 'Server=tcp:sqlguminterne-', parameters('environnement'), '.database.windows.net,1433;Initial Catalog=BdAppsInterne-', parameters('environnement'), ';Persist Security Info=False;User ID=sqladmin', parameters('environnement'), '@gumqc.OnMicrosoft.com;Password=', parameters('sqladminPassword'), ';MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=180;App=EntityFramework;Authentication=\"Active Directory Password\"')]",
-                            "type": "SQLAzure"
-                        }
-                    ]
-                },
-                "reserved": false,
-                "scmSiteAlsoStopped": false,
-                "clientAffinityEnabled": true,
-                "clientCertEnabled": false,
-                "hostNamesDisabled": false,
-                "containerSize": 0,
-                "dailyMemoryTimeQuota": 0,
-                "httpsOnly": true
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites",
-            "apiVersion": "2016-08-01",
-            "name": "[variables('Sites_Veille_func_name')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_FunctionApp_name'))]"
-            ],
-            "tags": {
-                "Environnement": "[parameters('Environnement')]"
-            },
-            "kind": "functionapp",
-            "properties": {
-                "enabled": true,
-                "hostNameSslStates": [
-                    {
-                        "name": "[concat('veille-func-',  parameters('Environnement'), '.azurewebsites.net')]",
-                        "sslState": "Disabled",
-                        "hostType": "Standard"
-                    },
-                    {
-                        "name": "[concat('veille-func-',  parameters('Environnement'), '.scm.azurewebsites.net')]",
-                        "sslState": "Disabled",
-                        "hostType": "Repository"
-                    }
-                ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_FunctionApp_name'))]",
-                "siteConfig": {
-                    "appSettings": [
-                        {
-                            "name": "AzureWebJobsDashboard",
-                            "value": "[concat( 'DefaultEndpointsProtocol=https;AccountName=', variables('storageAccounts_veillefunc_name'), ';AccountKey=', listKeys(resourceId( variables('StorResourceGroup'),'Microsoft.Storage/storageAccounts', variables('storageAccounts_veillefunc_name')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
-                        },
-                        {
-                            "name": "AzureWebJobsStorage",
-                            "value": "[concat( 'DefaultEndpointsProtocol=https;AccountName=', variables('storageAccounts_veillefunc_name'), ';AccountKey=', listKeys(resourceId( variables('StorResourceGroup'),'Microsoft.Storage/storageAccounts', variables('storageAccounts_veillefunc_name')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
-                        }
-                    ],
-                    "connectionStrings": [
-                        {
-                            "name": "bd_VeilleContenuExterneEntities",
-                            "value": "[concat( 'Server=tcp:sqlguminterne-',  parameters('Environnement'), '.database.windows.net,1433;Initial Catalog=BdVeille-',  parameters('Environnement'), ';Persist Security Info=False;User ID=sqladmin',  parameters('Environnement'), '@gumqc.OnMicrosoft.com;Password=',  parameters('sqladminPassword'), ';MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;App=EntityFramework;Authentication=\"Active Directory Password\"')]",
-                            "type": "SQLserver"
-                        }
-                    ]
-                },
-                "reserved": false,
-                "scmSiteAlsoStopped": false,
-                "clientAffinityEnabled": false,
-                "clientCertEnabled": false,
-                "hostNamesDisabled": false,
-                "containerSize": 1536,
-                "dailyMemoryTimeQuota": 0,
-                "httpsOnly": true
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites",
-            "apiVersion": "2016-08-01",
-            "name": "[variables('Sites_Veille_name')]",
-            "location": "[resourceGroup().location]",
-            "Identity": {
-                "type": "SystemAssigned"
-            },
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_ASP_Standard_name'))]"
-            ],
-            "kind": "app",
-            "tags": {
-                "Environnement": "[parameters('Environnement')]"
-            },
-            "properties": {
-                "enabled": true,
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('serverfarms_ASP_Standard_name'))]",
-                "siteConfig": {
-                    "connectionStrings": [
-                        {
-                            "name": "bd_VeilleContenuExterneEntities",
-                            "connectionString": "[concat( 'Server=tcp:sqlguminterne-',  parameters('Environnement'), '.database.windows.net,1433;Initial Catalog=BdVeille-',  parameters('Environnement'), ';Persist Security Info=False;User ID=sqladmin',  parameters('Environnement'), '@gumqc.OnMicrosoft.com;Password=',  parameters('sqladminPassword'), ';MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Authentication=\"Active Directory Password\";')]",
-                            "type": "SQLServer"
-                        },
-                        {
-                        "name": "usagers",
-                        "value":"Invité;Alexandre Locas;Anne-Claire Dalmont;Anne-Marie Santorineos;Anne Laurence Boulanger;Annie Mongeon;David Ardoin;Joëlle Duranleau;Michelle-Andrée Hogue;Philippe Charbonneau;Pierre Bourgeois;Salim Boudjemia;Wassila Djaid"
-                        }
-                    ],
-                    "hostNameSslStates": [
-                        {
-                            "name": "[concat('veille-' , parameters('Environnement'), '.azurewebsites.net')]",
-                            "sslState": "Disabled",
-                            "hostType": "Standard"
-                        },
-                        {
-                            "name": "[concat('veille-' , parameters('Environnement'), '.scm.azurewebsites.net')]",
-                            "sslState": "Disabled",
-                            "hostType": "Repository"
-                        }
-                    ]
-                },
-                "reserved": false,
-                "scmSiteAlsoStopped": false,
-                "clientAffinityEnabled": true,
-                "clientCertEnabled": false,
-                "hostNamesDisabled": false,
-                "containerSize": 0,
-                "dailyMemoryTimeQuota": 0,
-                "httpsOnly": true
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2018-02-01",
-            "name": "[concat(variables('sites_AppsInterne_name'), '/web')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('sites_AppsInterne_name'))]"
-            ],
-            "properties": {
-                "numberOfWorkers": "1",
-                "defaultDocuments": [
-                    "Default.htm",
-                    "Default.html",
-                    "Default.asp",
-                    "index.htm",
-                    "index.html",
-                    "iisstart.htm",
-                    "default.aspx",
-                    "index.php",
-                    "hostingstart.html"
-                ],
-                "netFrameworkVersion": "v4.0",
-                "phpVersion": "5.6",
-                "pythonVersion": "",
-                "nodeVersion": "",
-                "linuxFxVersion": "",
-                "requestTracingEnabled": "false",
-                "remoteDebuggingEnabled": "false",
-                "remoteDebuggingVersion": "VS2017",
-                "httpLoggingEnabled": "false",
-                "logsDirectorySizeLimit": "35",
-                "detailedErrorLoggingEnabled": "false",
-                "publishingUsername": "[concat('$AppsInterne-',  parameters('Environnement'))]",
-                "scmType": "None",
-                "use32BitWorkerProcess": "true",
-                "webSocketsEnabled": "false",
-                "alwaysOn": "false",
-                "appCommandLine": "",
-                "managedPipelineMode": "Integrated",
-                "virtualApplications": [
-                    {
-                        "virtualPath": "/",
-                        "physicalPath": "site\\wwwroot",
-                        "preloadEnabled": "true",
-                        "virtualDirectories": null
-                    }
-                ],
-                "winAuthAdminState": "0",
-                "winAuthTenantState": "0",
-                "customAppPoolIdentityAdminState": "false",
-                "customAppPoolIdentityTenantState": "false",
-                "loadBalancing": "LeastRequests",
-                "routingRules": [
-                ],
-                "experiments": {
-                    "rampUpRules": [
-                    ]
-                },
-                "autoHealEnabled": "false",
-                "vnetName": "",
-                "siteAuthEnabled": "false",
-                "siteAuthSettings": {
-                },
-                "localMySqlEnabled": "false",
-                "ipSecurityRestrictions": [
-                    {
-                        "ipAddress": "205.237.253.10/32",
-                        "name": "Allow_Soquij",
-                        "description": "Allow_Soquij",
-                        "priority": "100"
-                    }
-                ],
-                "scmIpSecurityRestrictionsUseMain": "true",
-                "http20Enabled": "false",
-                "minTlsVersion": "1.2",
-                "ftpsState": "AllAllowed",
-                "reservedInstanceCount": "0"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2018-11-01",
-            "name": "[concat(variables('sites_Veille_func_name'), '/web')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('sites_Veille_func_name'))]"
-            ],
-            "properties": {
-                "numberOfWorkers": "1",
-                "defaultDocuments": [
-                    "Default.htm",
-                    "Default.html",
-                    "Default.asp",
-                    "index.htm",
-                    "index.html",
-                    "iisstart.htm",
-                    "default.aspx",
-                    "index.php"
-                ],
-                "netFrameworkVersion": "v4.0",
-                "phpVersion": "5.6",
-                "pythonVersion": "",
-                "nodeVersion": "",
-                "linuxFxVersion": "",
-                "requestTracingEnabled": "false",
-                "remoteDebuggingEnabled": "false",
-                "httpLoggingEnabled": "false",
-                "logsDirectorySizeLimit": "35",
-                "detailedErrorLoggingEnabled": "false",
-                "publishingUsername": "[concat('$Veille-' , parameters('Environnement'))]",
-                "scmType": "None",
-                "use32BitWorkerProcess": "true",
-                "webSocketsEnabled": "false",
-                "alwaysOn": "false",
-                "appCommandLine": "",
-                "managedPipelineMode": "Integrated",
-                "virtualApplications": [
-                    {
-                        "virtualPath": "/",
-                        "physicalPath": "site\\wwwroot",
-                        "preloadEnabled": "false",
-                        "virtualDirectories": null
-                    }
-                ],
-                "winAuthAdminState": "0",
-                "winAuthTenantState": "0",
-                "customAppPoolIdentityAdminState": "false",
-                "customAppPoolIdentityTenantState": "false",
-                "loadBalancing": "LeastRequests",
-                "routingRules": [
-                ],
-                "experiments": {
-                    "rampUpRules": [
-                    ]
-                },
-                "autoHealEnabled": "false",
-                "vnetName": "",
-                "siteAuthEnabled": "false",
-                "siteAuthSettings": {
-                },
-                "cors": {
-                    "allowedOrigins": [
-                        "https://functions.azure.com",
-                        "https://functions-staging.azure.com",
-                        "https://functions-next.azure.com"
-                    ],
-                    "supportCredentials": "false"
-                },
-                "localMySqlEnabled": "false",
-                "ipSecurityRestrictions": [
-                    {
-                        "ipAddress": "205.237.253.10/32",
-                        "name": "Allow_Soquij",
-                        "description": "Allow_Soquij",
-                        "priority": "100"
-                    }
-                ],
-                "scmIpSecurityRestrictionsUseMain": "true",
-                "http20Enabled": "false",
-                "minTlsVersion": "1.2",
-                "ftpsState": "AllAllowed",
-                "reservedInstanceCount": "0"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/config",
-            "apiVersion": "2018-11-01",
-            "name": "[concat( variables('sites_Veille_name'), '/web')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('sites_Veille_name'))]"
-            ],
-            "properties": {
-                "numberOfWorkers": "1",
-                "defaultDocuments": [
-                    "Default.htm",
-                    "Default.html",
-                    "Default.asp",
-                    "index.htm",
-                    "index.html",
-                    "iisstart.htm",
-                    "default.aspx",
-                    "index.php",
-                    "hostingstart.html"
-                ],
-                "netFrameworkVersion": "v4.0",
-                "phpVersion": "5.6",
-                "pythonVersion": "",
-                "nodeVersion": "",
-                "linuxFxVersion": "",
-                "requestTracingEnabled": "false",
-                "remoteDebuggingEnabled": "false",
-                "remoteDebuggingVersion": "VS2017",
-                "httpLoggingEnabled": "false",
-                "logsDirectorySizeLimit": 35,
-                "detailedErrorLoggingEnabled": "false",
-                "publishingUsername": "[concat('$Veille-' , parameters('Environnement'))]",
-                "scmType": "None",
-                "use32BitWorkerProcess": "true",
-                "webSocketsEnabled": "false",
-                "alwaysOn": "false",
-                "appCommandLine": "",
-                "managedPipelineMode": "Integrated",
-                "virtualApplications": [
-                    {
-                        "virtualPath": "/",
-                        "physicalPath": "site\\wwwroot",
-                        "preloadEnabled": "true",
-                        "virtualDirectories": null
-                    }
-                ],
-                "winAuthAdminState": "0",
-                "winAuthTenantState": "0",
-                "customAppPoolIdentityAdminState": "false",
-                "customAppPoolIdentityTenantState": "false",
-                "loadBalancing": "LeastRequests",
-                "routingRules": [
-                ],
-                "experiments": {
-                    "rampUpRules": [
-                    ]
-                },
-                "autoHealEnabled": "false",
-                "vnetName": "",
-                "siteAuthEnabled": "false",
-                "siteAuthSettings": {
-                },
-                "localMySqlEnabled": "false",
-                "ipSecurityRestrictions": [
-                    {
-                        "ipAddress": "205.237.253.10/32",
-                        "name": "Allow_Soquij",
-                        "description": "Allow_Soquij",
-                        "priority": "100"
-                    }
-                ],
-                "scmIpSecurityRestrictionsUseMain": "true",
-                "http20Enabled": "false",
-                "minTlsVersion": "1.2",
-                "ftpsState": "AllAllowed",
-                "reservedInstanceCount": "0"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2016-08-01",
-            "name": "[concat(variables('sites_AppsInterne_name'), '/', variables('sites_AppsInterne_name'), '.azurewebsites.net')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('sites_AppsInterne_name'))]"
-            ],
-            "properties": {
-                "siteName": "[concat('appsinterne-',  parameters('environnement'))]",
-                "hostNameType": "Verified"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2016-08-01",
-            "name": "[concat(variables('sites_Veille_func_name'), '/', variables('sites_Veille_func_name'), '.azurewebsites.net')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('sites_Veille_func_name'))]"
-            ],
-            "properties": {
-                "siteName": "[concat('veille-func-' , parameters('Environnement'))]",
-                "hostNameType": "Verified"
-            }
-        },
-        {
-            "type": "Microsoft.Web/sites/hostNameBindings",
-            "apiVersion": "2016-08-01",
-            "name": "[concat(variables('sites_Veille_name'), '/', variables('sites_Veille_name'), '.azurewebsites.net')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('sites_Veille_name'))]"
-            ],
-            "properties": {
-                "siteName": "[concat('veille-' , parameters('Environnement'))]",
-                "hostNameType": "Verified"
-            }
+      {
+        "name": "[parameters('omsWorkspaceName')]",
+        "type": "Microsoft.OperationalInsights/workspaces",
+        "apiVersion": "2015-11-01-preview",
+        "location": "[parameters('workspaceRegion')]",
+        "properties": {
+          "sku": {
+            "name": "[parameters('omsSku')]"
+          }
         }
-    ],
-    "outputs": {
-        "AzureBlobFileSystem.ConnectionString:media": {
-            "type": "string",
-            "value": "[concat( 'DefaultEndpointsProtocol=https;AccountName=', variables('storageAccounts_appsinterne_name' ) ,';AccountKey=' , listKeys(resourceId( variables('StorResourceGroup'),'Microsoft.Storage/storageAccounts', variables('storageAccounts_appsinterne_name')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
+      },
+      {
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2015-05-01-preview",
+        "location": "[parameters('location')]",
+        "name": "[parameters('sqlServerName')]",
+        "properties": {
+          "administratorLogin": "[parameters('sqlAdministratorLogin')]",
+          "administratorLoginPassword": "[parameters('sqlAdministratorLoginPassword')]",
+          "version": "12.0"
         },
-        "AzureBlobFileSystem.RootUrl:media": {
-            "type": "string",
-            "value": "[concat( 'https://' , variables('storageAccounts_appsinterne_name'), '.blob.core.windows.net')]"
+        "tags": {
+          "DisplayName": "[parameters('sqlServerName')]"
         },
-        "VeilleDeLien.UrlBase": {
-            "type": "string",
-            "value": "[concat('https://veille-', parameters('Environnement'), '.azurewebsites.net')]"
-        },
-        "GuichetUnique.UrlBase": {
-            "type": "string",
-            "value": "[concat('https://gummaster-', parameters('environnement'), '.azurewebsites.net/umbraco')]"
-        },
-        "AzureWebJobsStorage": {
-            "type": "string",
-            "value": "[concat( 'DefaultEndpointsProtocol=https;AccountName=', variables('storageAccounts_veillefunc_name'), ';AccountKey=',listKeys(resourceId( variables('StorResourceGroup'),'Microsoft.Storage/storageAccounts', variables('storageAccounts_veillefunc_name')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
-        },
-        "bd_VeilleContenuExterneEntities": {
-            "type": "string",
-            "value": "[concat('Data Source=sqlguminterne-', parameters('Environnement'), '.database.windows.net,1433;Initial Catalog=BdVeille-', parameters('Environnement'), ';Persist Security Info=False;User ID=sqladmin' , parameters('Environnement'), ';Password=', parameters('sqladminPassword'), ';MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;App=EntityFramework')]"
-        }
-    }
-}
+        "resources": [
+          {
+            "type": "databases",
+            "apiVersion": "2017-03-01-preview",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+              "[parameters('sqlServerName')]"
+            ],
+            "name": "master",
+            "properties": {}
+          },
+          {
+            "type": "databases/providers/diagnosticSettings",
+            "name": "[concat('master/microsoft.insights/',variables('diagnosticSettingsName'))]",
+            "dependsOn": [
+              "[parameters('sqlServerName')]",
+              "[concat('Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspaceName'))]",
+              "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'), '/databases/master')]"
+            ],
+            "apiVersion": "2017-05-01-preview",
+            "properties": {
+              "name": "[variables('diagnosticSettingsName')]",
+              "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('omsWorkspaceName'))]",
+              "logs": [
+                {
+                  "category": "SQLSecurityAuditEvents",
+                  "enabled": true,
+                  "retentionPolicy": {
+                    "days": 0,
+                    "enabled": false
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "apiVersion": "2017-03-01-preview",
+            "type": "auditingSettings",
+            "name": "DefaultAuditingSettings",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers/', parameters('sqlServerName'))]"
+            ],
+            "properties": {
+              "State": "Enabled",
+              "auditActionsAndGroups": null,
+              "isAzureMonitorTargetEnabled": true
+            }
+          }
+        ]
+      }
+    ]
+  }
