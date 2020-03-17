@@ -91,7 +91,7 @@
         "resources": [
           {
             "type": "databases",
-            "apiVersion": "2017-03-01-preview",
+            "apiVersion": "2014-04-01",
             "location": "[parameters('location')]",
             "dependsOn": [
               "[parameters('sqlServerName')]"
@@ -107,7 +107,7 @@
               "[concat('Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspaceName'))]",
               "[concat('Microsoft.Sql/servers/', parameters('sqlServerName'), '/databases/master')]"
             ],
-            "apiVersion": "2017-05-01-preview",
+            "apiVersion": "2016-09-01",
             "properties": {
               "name": "[variables('diagnosticSettingsName')]",
               "workspaceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('omsWorkspaceName'))]",
