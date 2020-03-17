@@ -13,7 +13,7 @@
             "properties": {
                 "containers": [
                     {
-                        "name": "containerName",
+                        "name": "democontainer",
                         "properties": {
                             "image": "[variables('image')]",
                             "ports": [
