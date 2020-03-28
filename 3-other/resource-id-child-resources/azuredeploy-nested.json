@@ -39,6 +39,7 @@
            "type": "string",
            "value": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'networkSecurityGroup1', 'networkSecurityGroupRuleName')]"
         },
+        // This does not work
         "ruleResourceId2": {
            "type": "string",
            "value": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', 'networkSecurityGroupRuleName')]"
