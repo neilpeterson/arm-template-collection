@@ -1,23 +1,8 @@
-// Params file includes an error, surface that when param file is associated with template
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "image": {
-           "type": "string",
-           "metadata": {
-                "description": "Container Image to use."
-            }
-        },    
-        "containerName": {
-            "type": "string",
-            "metadata": {
-                "description": "Container name."
-            }
-        }
-    },
     "variables": {
-        "deployment": "[deployment().properties.templateLink.uri]"
+        "image": "mcr.microsoft.com/azuredocs/aci-helloworld"
     },
     "resources": [
         {
@@ -28,9 +13,9 @@
             "properties": {
                 "containers": [
                     {
-                        "name": "[parameters('containerName')]",
+                        "name": "democontainer",
                         "properties": {
-                            "image": "[parameters('image')]",
+                            "image": "[variables('image')]",
                             "ports": [
                                 {
                                     "port": 80
@@ -39,7 +24,7 @@
                             "resources": {
                                 "requests": {
                                     "cpu": 1,
-                                    "memoryInGB": 1
+                                    "memoryInGB": 4
                                 }
                             }
                         }
@@ -57,12 +42,5 @@
                  }
             }
         }
-    ],
-    "outputs": {
-        "deploymentUri": {
-           "type": "string",
-           "value": "[variables('deployment')]"
-        }
-    },
-    "functions": []
+    ]
 }
