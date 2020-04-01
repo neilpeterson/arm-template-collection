@@ -1,42 +1,45 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "variables": {
+        "name": "template-test-002"
+    },
     "resources": [
-      {
-        "type": "Microsoft.Resources/resourceGroups",
-        "name": "from-template",
-        "apiVersion": "2018-05-01",
-        "location": "westus",
-        "properties": {}
-      },
-      {
-          "name": "cosmosDbAccount1",
-          "type": "Microsoft.DocumentDB/databaseAccounts",
-          "apiVersion": "2015-04-08",
-          "location": "[resourceGroup().location]",
-          "tags": {},
-          "kind": "GlobalDocumentDB",
-          "properties": {
-              "consistencyPolicy": {
-                  "defaultConsistencyLevel": "Eventual",
-                  "maxStalenessPrefix": 1,
-                  "maxIntervalInSeconds": 5
-              },
-              "locations": [
-                  {
-                      "locationName": "location1",
-                      "failoverPriority": 0
-                  }
-              ],
-              "databaseAccountOfferType": "Standard",
-              "ipRangeFilter": "ipRangeFilter",
-              "enableAutomaticFailover": true,
-              "capabilities": [
-                  {
-                      "name": "EnableTable"
-                  }
-              ]
-          }
-      }
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2019-10-01",
+            "location": "eastus",
+            "name": "[variables('name')]"
+        },
+        {
+            "name": "nestedDeployment1",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "resourceGroup": "[variables('name')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/resourceGroups', variables('name'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "resources": [
+                        {
+                            "name": "nepeterssubtest",
+                            "type": "Microsoft.Storage/storageAccounts",
+                            "apiVersion": "2015-06-15",
+                            "location": "eastus",
+                            "tags": {
+                                "displayName": "storageaccount1"
+                            },
+                            "properties": {
+                                "accountType": "Standard_LRS"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
     ]
-  }
+}
