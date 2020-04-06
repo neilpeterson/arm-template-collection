@@ -2,11 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "variables": {
-        "name": "mysqlserverneil"
+        "sqlServer": "mysqlserverneil",
+        "firewallRuleName": "AllowAllWindowsAzureIps"
     },
     "resources": [
         {
-            "name": "[variables('name')]",
+            "name": "[variables('sqlServer')]",
             "type": "Microsoft.Sql/servers",
             "apiVersion": "2014-04-01",
             "location": "[resourceGroup().location]",
@@ -16,17 +17,23 @@
             }
         },
         {
+            "name": "[concat(variables('sqlServer'), '/' , variables('firewallRuleName'))]",
             "type": "Microsoft.Sql/servers/firewallRules",
             "apiVersion": "2015-05-01-preview",
             "dependsOn": [
-                "[resourceId('Microsoft.Sql/servers', variables('name'))]"
+                "[resourceId('Microsoft.Sql/servers', variables('sqlServer'))]"
             ],
             "location": "[resourceGroup().location]",
-            "name": "[concat(variables('name'), '/AllowAllWindowsAzureIps')]",
             "properties": {
                 "startIpAddress": "0.0.0.0",
                 "endIpAddress": "0.0.0.0"
             }
         }
-    ]
+    ],
+    "outputs": {
+        "firewallRules-id": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Sql/servers/firewallRules',variables('sqlServer'),'AllowAllWindowsAzureIps')]"
+        }
+    }
 }
