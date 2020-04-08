@@ -13,7 +13,13 @@
             "type": "string",
             "metadata": {
                 "description": "Container name."
-            }
+            },
+            "maxLength": 5,
+            "allowedValues": [
+                "one",
+                "two",
+                "three"
+            ]
         }
     },
     "variables": {
