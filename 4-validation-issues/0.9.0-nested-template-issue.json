@@ -1,5 +1,5 @@
 // To see issue, remove the value from VM Size on line 149 ("vmSize": ""). This is in the nested template.
-// To contrast, remove the valuse from VM Size on line 313 ("vmSize": ""). This resource is not in a nested template.
+// To contrast with expected behavior, remove the value from VM Size on line 313 ("vmSize": ""). This resource is not in a nested template.
 {
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
