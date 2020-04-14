@@ -132,7 +132,7 @@
             ],
             "properties": {
               "State": "Enabled",
-              "auditActionsAndGroups": null,
+              "auditActionsAndGroups": [],
               "isAzureMonitorTargetEnabled": true
             }
           }

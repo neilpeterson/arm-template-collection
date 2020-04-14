@@ -1,15 +1,12 @@
+// Requires ARM Tools 8.5 to demo issue
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "variables": {
-        "sqlServer": "mysqlservernepeters",
-        "firewallRuleName": "AllowAllWindowsAzureIps"
-    },
     "resources": [
         {
-            "name": "[variables('sqlServer')]",
+            "name": "mysqlservernepeters",
             "type": "Microsoft.Sql/servers",
-            "apiVersion": "2019-06-01-preview",
+            "apiVersion": "2014-04-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "administratorLogin": "adminUsername",
@@ -17,11 +14,11 @@
             },
             "resources": [
                 {
-                    "name": "[variables('firewallRuleName')]",
+                    "name": "AllowAllWindowsAzureIps",
                     "type": "firewallRules",
-                    "apiVersion": "2015-05-01-preview",
+                    "apiVersion": "2014-04-01",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Sql/servers', variables('sqlServer'))]"
+                        "[resourceId('Microsoft.Sql/servers', 'mysqlservernepeters')]"
                     ],
                     "location": "[resourceGroup().location]",
                     "properties": {
@@ -31,11 +28,5 @@
                 }
             ]
         }
-    ],
-    "outputs": {
-        "firewallRules-id": {
-            "type": "string",
-            "value": "[resourceId('Microsoft.Sql/servers/firewallRules',variables('sqlServer'),variables('firewallRuleName'))]"
-        }
-    }
+    ]
 }
