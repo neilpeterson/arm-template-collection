@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sites_name": {
+        "defaultValue": "vscode-sync-dev",
+        "type": "String"
+      }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Web/sites/config",
+        "apiVersion": "2018-11-01",
+        "name": "[concat(parameters('sites_name'), '/web')]",
+        "location": "West US",
+        "properties": {}
+      }
+    ]
+  }
+  
