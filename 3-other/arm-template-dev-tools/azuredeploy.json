@@ -109,7 +109,7 @@
 		},
 		{
 			"type": "Microsoft.Authorization/roleAssignments",
-			"apiVersion": "2018-09-01-preview",
+			"apiVersion": "2017-09-01",
 			"name": "[variables('bootstrapRoleAssignmentId')]",
 			"tags": {
 				"displayName": "Role Assignment"
@@ -143,7 +143,7 @@
 			},
 			"properties": {
 				"hardwareProfile": {
-					"vmSize": "Standard_DS2"
+					"vmSize": "Basic_A0"
 				},
 				"osProfile": {
 					"computerName": "[variables('vmName')]",
