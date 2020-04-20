@@ -1,1 +1,0 @@
-Test-AzResourceGroupDeployment -ResourceGroupName deploymentTest -TemplateFile azuredeploy.json
