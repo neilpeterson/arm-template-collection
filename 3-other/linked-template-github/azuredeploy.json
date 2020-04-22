@@ -2,7 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "variables": {
-        "template": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-tools-in-progress/linked-template-simple/azuredeploy-aci.json"
+        // "template": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/1-tools-in-progress/linked-template-simple/azuredeploy-aci.json"
+        "template": "https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/3-other/linked-template-github/azuredeploy-aci.json"
     },
     "resources": [
         {

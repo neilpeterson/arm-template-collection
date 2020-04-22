@@ -29,7 +29,7 @@
         {
             "name": "[variables('name')]",
             "type": "Microsoft.ContainerInstance/containerGroups",
-            "apiVersion": "2018-04-0x1",
+            "apiVersion": "2018-04-01",
             "location": "[resourceGroup().location]",
             "properties": {
                 "containers": [
