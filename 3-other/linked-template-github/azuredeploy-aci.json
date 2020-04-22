@@ -8,7 +8,7 @@
         {
             "name": "containerGroup1",
             "type": "Microsoft.ContainerInstance/containerGroups",
-            "apiVersion": "2018-04-0",
+            "apiVersion": "",
             "location": "[resourceGroup().location]",
             "properties": {
                 "containers": [
