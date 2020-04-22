@@ -1,4 +1,4 @@
-// az deployment group create --template-uri https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/3-other/linked-template-uri-function/azuredeploy.json --resource-group test123
+// az deployment group create --template-uri https://raw.githubusercontent.com/neilpeterson/arm-template-collection/master/3-other/linked-template-uri-function/azuredeploy.json --resource-group uri-test
 
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",

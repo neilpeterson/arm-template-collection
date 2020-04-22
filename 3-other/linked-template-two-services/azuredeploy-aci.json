@@ -9,7 +9,7 @@
         "value-one": {
            "type": "string",
             "defaultValue": "Cats"
-        },
+        }
         "value-two": {
             "type": "string",
             "defaultValue": "Dogs"
