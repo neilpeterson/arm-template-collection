@@ -1,16 +1,8 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "demoParam": {
-           "type": "string",
-           "metadata": {
-                "description": "description"
-            }
-        }
-    },
-    "variables": {
-    },
+    "parameters": {},
+    "variables": {},
     "resources": [
         {
             "name": "vote-database",
@@ -45,10 +37,6 @@
         "dbkey": {
            "type": "string",
             "value": "[listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts/', 'vote-database'),'2015-04-08').primaryMasterKey]"
-        },
-        "demoParam": {
-            "type": "string",
-            "value": "[parameters('demoParam')]"
         }
     }
 }
