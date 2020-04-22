@@ -11,7 +11,7 @@
     "variables": {},
     "resources": [
         {
-            "name": "vote-database-002",
+            "name": "vote-database",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2018-05-01",
             "properties": {
