@@ -1,6 +1,6 @@
 # Output Template
 
-Deploy an Azure VM with VS Code and all extensions needed for ARM Tempalte development.
+Deploy an Azure VM with VS Code and all extensions needed for ARM Template development.
 
 ## Deployment
 
