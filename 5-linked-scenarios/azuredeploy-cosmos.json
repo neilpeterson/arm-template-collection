@@ -1,11 +1,16 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {},
+    "parameters": {
+        "name": {
+           "type": "string",
+           "defaultValue": "vote-database"
+        }
+    },
     "variables": {},
     "resources": [
         {
-            "name": "vote-database",
+            "name": "[parameters('name')]",
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2015-04-08",
             "location": "[resourceGroup().location]",
