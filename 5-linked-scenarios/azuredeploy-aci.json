@@ -1,0 +1,89 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "title": {
+           "type": "string",
+           "defaultValue": "Azure Vote"
+        },
+        "value-one": {
+           "type": "string",
+            "defaultValue": "Cats"
+        },
+        "value-two": {
+            "type": "string",
+            "defaultValue": "Dogs"
+        },
+        "cosmosDb": {
+            "type": "string"
+        },
+        "cosmosDbKey": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "name": "azure-vote",
+        "image": "microsoft/azure-vote-front:cosmosdb"
+    },
+    "resources": [
+        {
+            "name": "[variables('name')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[variables('name')]",
+                        "properties": {
+                            "image": "[variables('image')]",
+                            "ports": [
+                                {
+                                    "port": 80
+                                }
+                            ],
+                            "environmentVariables": [
+                                {
+                                "name": "COSMOS_DB_ENDPOINT",
+                                "value": "[parameters('cosmosDb')]"
+                                },
+                                {
+                                "name": "COSMOS_DB_MASTERKEY",
+                                "value": "[parameters('cosmosDbKey')]"
+                                },
+                                {
+                                "name": "TITLE",
+                                "value": "[parameters('title')]"
+                                },
+                                {
+                                "name": "VOTE1VALUE",
+                                "value": "[parameters('value-one')]"
+                                },
+                                {
+                                "name": "VOTE2VALUE",
+                                "value": "[parameters('value-two')]"
+                                }                                 
+                            ],
+                            "resources": {
+                                "requests": {
+                                    "cpu": 1,
+                                    "memoryInGB": 4
+                                }
+                            }
+                        }
+                    }
+                ],
+                "osType": "Linux",
+                "ipAddress": {
+                    "type": "Public",
+                    "ports": [
+                        {
+                            "protocol": "TCP",
+                            "port": 80
+                        }
+                    ]
+                 }
+            }
+        }
+    ]
+}

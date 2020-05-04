@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+        {
+            "name": "vote-database",
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "2015-04-08",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "kind": "GlobalDocumentDB",
+            "properties": {
+                "consistencyPolicy": {
+                    "defaultConsistencyLevel": "Eventual",
+                    "maxStalenessPrefix": 1,
+                    "maxIntervalInSeconds": 5
+                },
+                "locations": [
+                    {
+                        "locationName": "[resourceGroup().location]",
+                        "failoverPriority": 0
+                    }
+                ],
+                "databaseAccountOfferType": "Standard",
+                "enableAutomaticFailover": true,
+                "capabilities": []
+            }
+        }
+    ],
+    "outputs": {
+        "dbendpoint": {
+           "type": "string",
+            "value": "[reference('vote-database').documentEndpoint]"
+        },
+        "dbkey": {
+           "type": "string",
+            "value": "[listKeys(resourceId('Microsoft.DocumentDb/databaseAccounts/', 'vote-database'),'2015-04-08').primaryMasterKey]"
+        }
+    }
+}
